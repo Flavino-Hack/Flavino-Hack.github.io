@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio d'étudiant en Réseaux Informatiques et Télécommunications">
+    <title>Mon Portfolio - Étudiant R&T</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- En-tête / Navigation -->
+    <header>
+        <nav>
+            <div class="logo">R&T Portfolio</div>
+            <ul class="nav-links">
+                <li><a href="#accueil">Accueil</a></li>
+                <li><a href="#competences">Compétences</a></li>
+                <li><a href="#projets-reseaux">Projets Réseaux</a></li>
+                <li><a href="#projets-prog">Projets Programmation</a></li>
+                <li><a href="#parcours">Parcours</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Section Accueil -->
+    <section id="accueil" class="hero">
+        <div class="hero-content">
+            <h1>👋 Je suis <span class="highlight">Wendtoin Guy Flavien KIEMA</span></h1>
+            <p class="tagline">Étudiant en <strong>Réseaux Informatiques & Télécommunications</strong></p>
+            <p>Passionné par l'infrastructure réseau, la cybersécurité, le développement et l'automatisation.</p>
+            <div class="cta-buttons">
+                <a href="#projets-reseaux" class="btn btn-primary">Voir projets réseaux</a>
+                <a href="#projets-prog" class="btn btn-secondary">Voir projets programmation</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Compétences -->
+    <section id="competences">
+        <h2>⚙️ Compétences Techniques</h2>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <h3>🌐 Réseaux & Télécoms</h3>
+                <ul>
+                    <li>Configuration Cisco (routeurs/switchs)</li>
+                    <li>VLAN, STP, DHCP, NAT, ACL</li>
+                    <li>Protocoles : TCP/IP, OSPF, BGP (bases)</li>
+                    <li>Wireshark, Packet Tracer, GNS3</li>
+                    <li>Fibre optique, SDSL, xDSL</li>
+                </ul>
+            </div>
+            <div class="skill-card">
+                <h3>💻 Systèmes & Administration</h3>
+                <ul>
+                    <li>Linux (Ubuntu, Debian, Kali)</li>
+                    <li>Windows Server (Active Directory)</li>
+                    <li>Scripting Bash / PowerShell</li>
+                    <li>Virtualisation (VirtualBox, VMware)</li>
+                    <li>Docker (bases)</li>
+                </ul>
+            </div>
+            <div class="skill-card">
+                <h3>🐍 Programmation & Outils</h3>
+                <ul>
+                    <li>Python (automatisation, scraping, API)</li>
+                    <li>C / C++ (bases embarquées)</li>
+                    <li>HTML / CSS / JavaScript (front-end)</li>
+                    <li>PHP / SQL (back-end basique)</li>
+                    <li>Git / GitHub, VS Code</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION PROJETS RÉSEAUX -->
+    <section id="projets-reseaux">
+        <h2>🌐 Projets Réseaux & Télécoms</h2>
+        <p class="section-subtitle">Infrastructure, connectivité, protocoles et sécurité réseau</p>
+        
+        <div class="projets-grid">
+            <div class="projet-card">
+                <div class="projet-image">🏗️</div>
+                <h3>Architecture réseau multi-sites</h3>
+                <p>Conception d'un réseau d'entreprise avec 3 sites interconnectés en OSPF, VLAN, DHCP relay et ACLs sous GNS3.</p>
+                <div class="tech-tags">
+                    <span>Cisco</span>
+                    <span>OSPF</span>
+                    <span>VLAN</span>
+                    <span>GNS3</span>
+                </div>
+                <a href="#" class="btn-small">Voir la topologie →</a>
+            </div>
+            
+            <div class="projet-card">
+                <div class="projet-image">📡</div>
+                <h3>Simulation réseau avec Packet Tracer</h3>
+                <p>Mise en place d'un réseau complet : serveurs DNS/HTTP/DHCP, switchs VLAN, routage statique et NAT.</p>
+                <div class="tech-tags">
+                    <span>Packet Tracer</span>
+                    <span>NAT</span>
+                    <span>DHCP</span>
+                    <span>DNS</span>
+                </div>
+                <a href="#" class="btn-small">Voir le projet →</a>
+            </div>
+            
+            <div class="projet-card">
+                <div class="projet-image">🔒</div>
+                <h3>Analyse et filtrage réseau</h3>
+                <p>Capture et analyse de trafic avec Wireshark, création de règles firewall iptables sur Linux.</p>
+                <div class="tech-tags">
+                    <span>Wireshark</span>
+                    <span>iptables</span>
+                    <span>TCP/IP</span>
+                </div>
+                <a href="#" class="btn-small">Voir l'analyse →</a>
+            </div>
+
+            <div class="projet-card">
+                <div class="projet-image">🖥️</div>
+                <h3>Serveurs Linux (LAMP + DNS)</h3>
+                <p>Installation et configuration d'un serveur Web Apache, DNS BIND9 et FTP sous Ubuntu Server.</p>
+                <div class="tech-tags">
+                    <span>Ubuntu</span>
+                    <span>Apache</span>
+                    <span>BIND9</span>
+                    <span>FTP</span>
+                </div>
+                <a href="#" class="btn-small">Voir la config →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION PROJETS PROGRAMMATION -->
+    <section id="projets-prog">
+        <h2>🐍 Projets Programmation & Automatisation</h2>
+        <p class="section-subtitle">Scripts, outils, applications et automatisation réseau</p>
+        
+        <div class="projets-grid">
+            <div class="projet-card">
+                <div class="projet-image">🤖</div>
+                <h3>Automatisation SSH multi-switchs</h3>
+                <p>Script Python utilisant Netmiko pour sauvegarder automatiquement les configs de 10+ switchs Cisco.</p>
+                <div class="tech-tags">
+                    <span>Python</span>
+                    <span>Netmiko</span>
+                    <span>SSH</span>
+                    <span>Regex</span>
+                </div>
+                <a href="#" class="btn-small">Voir le code →</a>
+            </div>
+            
+            <div class="projet-card">
+                <div class="projet-image">🌍</div>
+                <h3>Scanner réseau & surveillance</h3>
+                <p>Outil en Python qui scanne les ports, détecte les appareils actifs et envoie des alertes email.</p>
+                <div class="tech-tags">
+                    <span>Python</span>
+                    <span>Socket</span>
+                    <span>Scapy</span>
+                    <span>SMTP</span>
+                </div>
+                <a href="#" class="btn-small">Voir le projet →</a>
+            </div>
+            
+            <div class="projet-card">
+                <div class="projet-image">📊</div>
+                <h3>Dashboard superviseur réseau</h3>
+                <p>Application web (Flask + Chart.js) pour visualiser l'état des équipements réseau (ping, uptime).</p>
+                <div class="tech-tags">
+                    <span>Flask</span>
+                    <span>JavaScript</span>
+                    <span>Chart.js</span>
+                    <span>API</span>
+                </div>
+                <a href="#" class="btn-small">Voir la démo →</a>
+            </div>
+
+            <div class="projet-card">
+                <div class="projet-image">🔧</div>
+                <h3>Générateur de config Cisco</h3>
+                <p>Outil Python qui génère automatiquement des fichiers de configuration pour routeurs/switchs à partir d'un template.</p>
+                <div class="tech-tags">
+                    <span>Python</span>
+                    <span>Jinja2</span>
+                    <span>YAML</span>
+                </div>
+                <a href="#" class="btn-small">Voir le code →</a>
+            </div>
+
+            <div class="projet-card">
+                <div class="projet-image">🕸️</div>
+                <h3>Application web de monitoring</h3>
+                <p>Site PHP/MySQL pour enregistrer et suivre l'état des équipements réseau (base de données locale).</p>
+                <div class="tech-tags">
+                    <span>PHP</span>
+                    <span>MySQL</span>
+                    <span>Bootstrap</span>
+                </div>
+                <a href="#" class="btn-small">Voir le projet →</a>
+            </div>
+
+            <div class="projet-card">
+                <div class="projet-image">📡</div>
+                <h3>Script Bash d'audit système</h3>
+                <p>Outil shell pour auditer la sécurité d'un serveur Linux (logs, services, ports ouverts).</p>
+                <div class="tech-tags">
+                    <span>Bash</span>
+                    <span>Linux</span>
+                    <span>Cron</span>
+                </div>
+                <a href="#" class="btn-small">Voir le script →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Parcours -->
+    <section id="parcours">
+        <h2>📖 Parcours & Formations</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-date">2024 - 2026</div>
+                <div class="timeline-content">
+                    <h3>BUT Réseaux & Télécommunications</h3>
+                    <p>IUT de [Ville] - Spécialité Cybersécurité & Cloud</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2025</div>
+                <div class="timeline-content">
+                    <h3>Certification Cisco CCNA1</h3>
+                    <p>Introduction aux réseaux - En cours</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-date">2024</div>
+                <div class="timeline-content">
+                    <h3>Bac STI2D - SIN</h3>
+                    <p>Lycée [Nom] - Mention Bien</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Contact -->
+    <section id="contact">
+        <h2>📬 Me contacter</h2>
+        <div class="contact-container">
+            <div class="contact-info">
+                <p>📧 <strong>Email :</strong> flavienkiema1@gmail.com</p>
+                <p>🔗 <strong>LinkedIn :</strong> linkedin.com/in/flavienkiema</p>
+                <p>💻 <strong>GitHub :</strong> github.com/Flavino-Hack/</p>
+                <p>📱 <strong>Tél :</strong> 64 93 16 93 / 70 57 08 57</p>
+            </div>
+            <form class="contact-form">
+                <input type="text" placeholder="Nom" required>
+                <input type="email" placeholder="Email" required>
+                <textarea placeholder="Message" rows="4" required></textarea>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Pied de page -->
+    <footer>
+        <p>© 2025 Wendtoin Guy Flavien KIEMA - Étudiant en Réseaux Informatiques & Télécoms</p>
+    </footer>
+</body>
+</html>
