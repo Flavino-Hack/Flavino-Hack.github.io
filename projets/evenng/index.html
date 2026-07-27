@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvenNG - Projet de Flavien KIEMA</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <style>
+        /* Styles spécifiques à la page projet */
+        .project-detail {
+            max-width: 1100px;
+            margin: 100px auto 0;
+            padding: 2rem;
+        }
+        .project-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .project-header h1 {
+            font-size: 2.8rem;
+            color: #1a2a3a;
+        }
+        .project-header .badge {
+            display: inline-block;
+            background: #00a8ff;
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .project-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+        .project-description h2 {
+            text-align: left;
+            border-bottom: none;
+            color: #1a2a3a;
+        }
+        .project-description ul {
+            list-style: none;
+            padding: 0;
+        }
+        .project-description li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .project-description li:before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: #00a8ff;
+        }
+        .project-sidebar {
+            background: #f5f7fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+        }
+        .project-sidebar h3 {
+            color: #1a2a3a;
+            margin-top: 0;
+        }
+        .tech-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .tech-list span {
+            background: #e0e7ff;
+            padding: 0.2rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #1a2a3a;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #00a8ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .project-content {
+                grid-template-columns: 1fr;
+            }
+            .project-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <div class="logo">R&T Portfolio</div>
+            <ul class="nav-links">
+                <li><a href="../../index.html#accueil">Accueil</a></li>
+                <li><a href="../../index.html#competences">Compétences</a></li>
+                <li><a href="../../index.html#projets-reseaux">Projets Réseaux</a></li>
+                <li><a href="../../index.html#projets-prog">Projets Programmation</a></li>
+                <li><a href="../../index.html#parcours">Parcours</a></li>
+                <li><a href="../../index.html#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Détail du projet -->
+    <section class="project-detail">
+        <div class="project-header">
+            <h1>⚡ EvenNG</h1>
+            <span class="badge">🚀 Projet Personnel</span>
+            <p style="color: #666; margin-top: 1rem;">
+                [Description courte du projet - 1 phrase percutante]
+            </p>
+        </div>
+
+        <div class="project-content">
+            <!-- Description principale -->
+            <div class="project-description">
+                <h2>📖 Présentation du projet</h2>
+                <p>
+                    <!-- Description détaillée -->
+                    [Parle du contexte : pourquoi ce projet ? Quel était l'objectif ?]
+                </p>
+
+                <h2>🎯 Objectifs</h2>
+                <ul>
+                    <li>[Objectif 1]</li>
+                    <li>[Objectif 2]</li>
+                    <li>[Objectif 3]</li>
+                </ul>
+
+                <h2>🛠️ Fonctionnalités</h2>
+                <ul>
+                    <li>[Fonctionnalité 1]</li>
+                    <li>[Fonctionnalité 2]</li>
+                    <li>[Fonctionnalité 3]</li>
+                </ul>
+
+                <h2>📚 Ce que j'ai appris</h2>
+                <ul>
+                    <li>[Compétence acquise 1]</li>
+                    <li>[Compétence acquise 2]</li>
+                    <li>[Compétence acquise 3]</li>
+                </ul>
+
+                <a href="../../index.html" class="back-link">← Retour au portfolio</a>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="project-sidebar">
+                <h3>🔧 Technologies</h3>
+                <div class="tech-list">
+                    <span>Python</span>
+                    <span>Flask</span>
+                    <span>JavaScript</span>
+                </div>
+
+                <hr style="margin: 1.5rem 0; border: none; border-top: 1px solid #ddd;">
+
+                <h3>📅 Période</h3>
+                <p>[Mois/Année]</p>
+
+                <h3>👤 Rôle</h3>
+                <p>Développeur / Concepteur</p>
+
+                <h3>🔗 Liens</h3>
+                <p>
+                    <a href="#" target="_blank" style="color: #00a8ff;">GitHub</a><br>
+                    <a href="#" target="_blank" style="color: #00a8ff;">Démo en ligne</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pied de page -->
+    <footer>
+        <p>© 2025 Wendtoin Guy Flavien KIEMA - Étudiant en Réseaux Informatiques & Télécoms</p>
+    </footer>
+
+    <script src="../../js/main.js"></script>
+
+    
+</body>
+</html>
