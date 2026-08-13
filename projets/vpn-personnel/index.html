@@ -379,6 +379,42 @@
             transform: translateY(-2px);
         }
 
+        /* ========== CODE BLOCKS ========== */
+        .code-block {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            margin: 0.8rem 0 1.5rem 0;
+            overflow-x: auto;
+            border: 1px solid #1e293b;
+        }
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+        }
+        .code-block code {
+            color: #e2e8f0;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            display: block;
+            white-space: pre;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        .code-block .comment {
+            color: #64748b;
+            font-style: italic;
+        }
+        .code-block .command {
+            color: #10b981;
+        }
+        .code-block .string {
+            color: #fbbf24;
+        }
+        .code-block .variable {
+            color: #60a5fa;
+        }
+
         /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
             .projet-header h1 { font-size: 2rem; }
@@ -391,6 +427,8 @@
             .component-table th, .component-table td { padding: 0.5rem 0.7rem; }
             .competences-list { grid-template-columns: 1fr 1fr; }
             .galerie-grid { grid-template-columns: 1fr 1fr; }
+            .code-block { padding: 0.8rem 1rem; }
+            .code-block code { font-size: 0.7rem; line-height: 1.5; }
         }
         @media (max-width: 480px) {
             .projet-header h1 { font-size: 1.5rem; }
@@ -626,6 +664,145 @@
                     <span class="etape-outils">📱 Android, OpenVPN Connect</span>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- ===== COMMANDES EXÉCUTÉES ===== -->
+    <section class="projet-section">
+        <h2>💻 Commandes exécutées</h2>
+        <p>
+            Voici l'ensemble des commandes utilisées pour la mise en place du serveur VPN,
+            organisées par ordre chronologique.
+        </p>
+
+        <!-- Étape 1 : Installation -->
+        <h3>📦 1. Installation d'OpenVPN sur Kali Linux</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Mise à jour du système</span>
+sudo apt update && sudo apt upgrade -y
+
+<span class="comment"># Clonage du script d'installation</span>
+cd ~
+git clone https://github.com/pbxforce/vpn-server-openvpn.git
+cd vpn-server-openvpn
+
+<span class="comment"># Lancement du script d'installation</span>
+sudo bash install-vpn.sh</code></pre>
+        </div>
+
+        <!-- Étape 2 : Génération des certificats -->
+        <h3>🔐 2. Génération des certificats avec Easy-RSA</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Génération du certificat CA</span>
+cd /etc/openvpn/easy-rsa
+sudo ./easyrsa init-pki
+sudo ./easyrsa build-ca nopass
+
+<span class="comment"># Génération du certificat serveur</span>
+sudo ./easyrsa gen-req server nopass
+sudo ./easyrsa sign-req server server
+
+<span class="comment"># Génération du certificat client</span>
+sudo ./easyrsa gen-req client1 nopass
+sudo ./easyrsa sign-req client client1
+
+<span class="comment"># Génération de la clé Diffie-Hellman</span>
+sudo ./easyrsa gen-dh</code></pre>
+        </div>
+
+        <!-- Étape 3 : Copie des certificats -->
+        <h3>📁 3. Copie des certificats dans /etc/openvpn/</h3>
+        <div class="code-block">
+            <pre><code>sudo cp pki/ca.crt /etc/openvpn/
+sudo cp pki/issued/server.crt /etc/openvpn/
+sudo cp pki/private/server.key /etc/openvpn/
+sudo cp pki/dh.pem /etc/openvpn/
+sudo cp pki/issued/client1.crt /etc/openvpn/client.crt
+sudo cp pki/private/client1.key /etc/openvpn/client.key</code></pre>
+        </div>
+
+        <!-- Étape 4 : Activation IP Forwarding -->
+        <h3>⚙️ 4. Activation de l'IP forwarding</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Ajout de la ligne dans sysctl.conf</span>
+echo "net.ipv4.ip_forward = 1" | sudo tee -a /etc/sysctl.conf
+
+<span class="comment"># Application de la configuration</span>
+sudo sysctl -p
+
+<span class="comment"># Vérification</span>
+cat /proc/sys/net/ipv4/ip_forward</code></pre>
+        </div>
+
+        <!-- Étape 5 : Configuration NAT -->
+        <h3>🌐 5. Configuration NAT avec iptables</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Trouver l'interface réseau (eth0 dans notre cas)</span>
+ip a
+
+<span class="comment"># Ajout des règles NAT</span>
+sudo iptables -t nat -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j MASQUERADE
+sudo iptables -A FORWARD -i tun0 -j ACCEPT
+sudo iptables -A FORWARD -o tun0 -j ACCEPT
+
+<span class="comment"># Vérification des règles</span>
+sudo iptables -t nat -L -n -v
+
+<span class="comment"># Sauvegarde des règles iptables</span>
+sudo apt-get install iptables-persistent -y
+sudo netfilter-persistent save</code></pre>
+        </div>
+
+        <!-- Étape 6 : Démarrage du serveur -->
+        <h3>🚀 6. Démarrage du serveur OpenVPN</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Démarrage du service</span>
+sudo systemctl start openvpn@server
+
+<span class="comment"># Activation au démarrage</span>
+sudo systemctl enable openvpn@server
+
+<span class="comment"># Vérification du statut</span>
+sudo systemctl status openvpn@server
+
+<span class="comment"># Consultation des logs</span>
+sudo tail -f /var/log/openvpn.log</code></pre>
+        </div>
+
+        <!-- Étape 7 : Création du fichier client -->
+        <h3>📱 7. Création du fichier client .ovpn</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Retour dans le dossier du projet</span>
+cd ~/vpn-server-openvpn
+
+<span class="comment"># Création du fichier client</span>
+cat > monvpn.ovpn << 'EOF'
+client
+dev tun
+proto udp
+remote 102.179.234.178 1194
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+remote-cert-tls server
+cipher AES-256-GCM
+verb 3
+&lt;ca&gt;
+EOF
+
+<span class="comment"># Ajout des certificats</span>
+sudo cat /etc/openvpn/ca.crt >> monvpn.ovpn
+echo "&lt;/ca&gt;" >> monvpn.ovpn
+echo "&lt;cert&gt;" >> monvpn.ovpn
+sudo cat /etc/openvpn/client.crt >> monvpn.ovpn
+echo "&lt;/cert&gt;" >> monvpn.ovpn
+echo "&lt;key&gt;" >> monvpn.ovpn
+sudo cat /etc/openvpn/client.key >> monvpn.ovpn
+echo "&lt;/key&gt;" >> monvpn.ovpn
+
+<span class="comment"># Vérification</span>
+ls -la monvpn.ovpn</code></pre>
         </div>
     </section>
 
