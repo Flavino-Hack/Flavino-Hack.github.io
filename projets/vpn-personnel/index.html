@@ -1,390 +1,478 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Projet VPN personnel - Conception d'un serveur OpenVPN avec Kali Linux">
-    <title>VPN Personnel - OpenVPN & Kali Linux</title>
-    <link rel="stylesheet" href="../../css/style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="Projet VPN personnel - Conception d'un serveur OpenVPN avec Kali Linux"/>
+    <title>VPN Personnel - OpenVPN &amp; Kali Linux</title>
+    <link rel="stylesheet" href="../../css/style.css"/>
     <style>
-        /* Styles spécifiques à la page projet */
-        .projet-detail {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1.5rem;
+        /* ========== VARIABLES ========== */
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --accent-light: #d1fae5;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --transition: 0.3s ease;
         }
 
-        .projet-header {
-            text-align: center;
-            padding: 3rem 0;
-            border-bottom: 3px solid var(--primary-color, #2e7d32);
+        /* ========== PAGE LAYOUT ========== */
+        .projet-detail {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* ========== BACK LINK ========== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
             margin-bottom: 2rem;
         }
+        .back-link:hover {
+            color: var(--accent);
+            transform: translateX(-4px);
+        }
 
+        /* ========== HEADER ========== */
+        .projet-header {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius);
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .projet-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .projet-header .icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
         .projet-header h1 {
             font-size: 2.8rem;
-            margin-bottom: 0.5rem;
-            color: #1a237e;
+            font-weight: 800;
+            color: #fff;
+            margin: 0.5rem 0;
+            position: relative;
         }
-
         .projet-header .sous-titre {
-            font-size: 1.2rem;
-            color: #555;
-            max-width: 700px;
-            margin: 0 auto;
+            font-size: 1.15rem;
+            color: #94a3b8;
+            max-width: 650px;
+            margin: 0 auto 1.5rem;
+            position: relative;
         }
-
         .projet-badges {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 0.7rem;
-            margin: 1.5rem 0;
+            gap: 0.6rem;
+            position: relative;
         }
-
         .badge {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 0.3rem 1rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+            padding: 0.3rem 1.1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
             font-weight: 600;
-            border: 1px solid #a5d6a7;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(4px);
         }
-
         .projet-meta {
             display: flex;
             justify-content: center;
-            gap: 2rem;
-            color: #666;
-            font-size: 0.95rem;
-            margin-top: 0.5rem;
-        }
-
-        .projet-section {
-            background: #fff;
-            padding: 2rem;
-            margin: 2rem 0;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            border-left: 4px solid #2e7d32;
-        }
-
-        .projet-section h2 {
-            color: #1a237e;
-            font-size: 1.8rem;
-            margin-top: 0;
-            margin-bottom: 1.5rem;
-        }
-
-        .projet-section h3 {
-            color: #333;
-            font-size: 1.2rem;
+            flex-wrap: wrap;
+            gap: 1.8rem;
             margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
-        }
-
-        /* Schéma d'architecture */
-        .schema-container {
-            background: #f5f7fa;
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
-            margin: 1.5rem 0;
-            border: 1px solid #e0e0e0;
-        }
-
-        .schema-container img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        .schema-container .schema-legend {
-            margin-top: 1rem;
+            color: #94a3b8;
             font-size: 0.9rem;
-            color: #666;
+            position: relative;
+        }
+        .projet-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
         }
 
-        /* Tableau des composants */
+        /* ========== SECTIONS ========== */
+        .projet-section {
+            background: var(--white);
+            padding: 2rem 2.2rem;
+            margin: 1.8rem 0;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid #eef2f6;
+            transition: var(--transition);
+        }
+        .projet-section:hover {
+            border-color: var(--accent);
+        }
+        .projet-section h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .projet-section h3 {
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.6rem;
+        }
+        .projet-section p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        .projet-section ul {
+            color: var(--text-light);
+            line-height: 1.9;
+            padding-left: 1.5rem;
+        }
+        .projet-section ul li strong {
+            color: var(--text);
+        }
+
+        /* ========== SCHÉMA ========== */
+        .schema-container {
+            background: #0f172a;
+            padding: 2rem 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+        .schema-container pre {
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            margin: 0;
+            white-space: pre;
+        }
+        .schema-container .schema-legend {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            padding-top: 1rem;
+        }
+
+        /* ========== TABLEAU ========== */
         .component-table {
             width: 100%;
             border-collapse: collapse;
             margin: 1rem 0;
+            font-size: 0.95rem;
         }
-
         .component-table th {
-            background: #1a237e;
+            background: var(--primary);
             color: #fff;
-            padding: 0.8rem;
+            padding: 0.8rem 1rem;
             text-align: left;
+            font-weight: 600;
         }
-
+        .component-table th:first-child { border-radius: 8px 0 0 0; }
+        .component-table th:last-child { border-radius: 0 8px 0 0; }
         .component-table td {
-            padding: 0.8rem;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #eef2f6;
+            color: var(--text-light);
         }
+        .component-table tr:last-child td { border-bottom: none; }
+        .component-table tr:hover td { background: #f8fafc; }
+        .component-table td strong { color: var(--text); }
 
-        .component-table tr:hover {
-            background: #f5f7fa;
-        }
-
-        /* Timeline des étapes */
+        /* ========== TIMELINE ========== */
         .timeline-etapes {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.8rem;
         }
-
         .etape-item {
             display: flex;
             align-items: flex-start;
-            gap: 1.5rem;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #2e7d32;
+            gap: 1.2rem;
+            padding: 1rem 1.2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            transition: var(--transition);
         }
-
+        .etape-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
         .etape-numero {
-            background: #2e7d32;
+            background: var(--accent);
             color: #fff;
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 0.85rem;
             flex-shrink: 0;
         }
-
         .etape-contenu h4 {
-            margin: 0 0 0.3rem 0;
-            color: #1a237e;
+            margin: 0 0 0.2rem 0;
+            color: var(--text);
+            font-size: 1rem;
         }
-
         .etape-contenu p {
             margin: 0;
-            color: #555;
-            font-size: 0.95rem;
+            color: var(--text-light);
+            font-size: 0.92rem;
         }
-
         .etape-contenu .etape-outils {
-            font-size: 0.8rem;
-            color: #888;
+            font-size: 0.78rem;
+            color: #94a3b8;
             margin-top: 0.3rem;
+            display: block;
         }
 
-        /* Grille défis/solutions */
+        /* ========== DÉFIS ========== */
         .defis-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1rem;
         }
-
         .defi-card {
-            background: #f8f9fa;
             padding: 1.2rem;
-            border-radius: 8px;
-            border-left: 4px solid #e65100;
+            border-radius: 12px;
+            border-left: 4px solid #ef4444;
+            background: #fef2f2;
         }
-
-        .defi-card .solution {
-            border-left-color: #2e7d32;
-            background: #e8f5e9;
+        .defi-card.solution {
+            border-left-color: var(--accent);
+            background: var(--accent-light);
         }
-
         .defi-card .defi-titre {
-            font-weight: 600;
-            color: #333;
-        }
-
-        .defi-card .defi-desc {
-            color: #555;
+            font-weight: 700;
+            color: var(--text);
             font-size: 0.95rem;
+        }
+        .defi-card .defi-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
             margin: 0.3rem 0 0 0;
         }
+        .defi-card.solution .defi-titre { color: var(--accent-hover); }
 
-        /* Compétences */
+        /* ========== COMPÉTENCES ========== */
         .competences-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 1rem;
-            margin: 1rem 0;
         }
-
         .competence-item {
-            background: #f5f7fa;
-            padding: 1rem;
-            border-radius: 8px;
+            background: #f8fafc;
+            padding: 1.2rem;
+            border-radius: 12px;
             text-align: center;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #eef2f6;
+            transition: var(--transition);
         }
-
+        .competence-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
         .competence-item .cat {
-            font-weight: 600;
-            color: #1a237e;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.95rem;
         }
-
         .competence-item .skills {
-            font-size: 0.9rem;
-            color: #555;
+            font-size: 0.85rem;
+            color: var(--text-light);
             margin-top: 0.3rem;
         }
 
-        /* Galerie */
+        /* ========== GALERIE ========== */
         .galerie-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 1rem;
         }
-
         .galerie-item {
-            background: #f5f7fa;
-            border-radius: 8px;
+            background: #f8fafc;
+            border-radius: 12px;
             overflow: hidden;
-            border: 1px solid #e0e0e0;
+            border: 1px solid #eef2f6;
+            transition: var(--transition);
         }
-
-        .galerie-item img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
+        .galerie-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
         }
-
+        .galerie-item .preview {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            background: #f1f5f9;
+        }
+        .galerie-item .preview.green { background: #d1fae5; }
+        .galerie-item .preview.dark { background: #0f172a; color: #e2e8f0; }
+        .galerie-item .preview.orange { background: #ffedd5; }
+        .galerie-item .preview.purple { background: #f3e8ff; }
         .galerie-item .caption {
             padding: 0.8rem;
             text-align: center;
-            font-size: 0.9rem;
-            color: #555;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 500;
         }
 
-        /* Liens */
+        /* ========== RESSOURCES ========== */
         .ressources-links {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.8rem;
         }
-
         .ressources-links a {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 0.5rem 1.2rem;
-            border-radius: 20px;
+            background: var(--accent-light);
+            color: var(--accent-hover);
+            padding: 0.5rem 1.3rem;
+            border-radius: 50px;
             text-decoration: none;
-            font-weight: 500;
-            border: 1px solid #a5d6a7;
-            transition: all 0.3s;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            transition: var(--transition);
         }
-
         .ressources-links a:hover {
-            background: #2e7d32;
+            background: var(--accent);
             color: #fff;
+            transform: translateY(-2px);
         }
 
-        /* Navigation retour */
-        .back-link {
-            display: inline-block;
-            margin-bottom: 1.5rem;
-            color: #1a237e;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
+        /* ========== RESPONSIVE ========== */
         @media (max-width: 768px) {
-            .defis-grid {
-                grid-template-columns: 1fr;
-            }
-            .projet-meta {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            .projet-header h1 {
-                font-size: 2rem;
-            }
-            .projet-section {
-                padding: 1.2rem;
-            }
-            .etape-item {
-                flex-direction: column;
-                align-items: stretch;
-            }
+            .projet-header h1 { font-size: 2rem; }
+            .projet-header { padding: 2rem 1.2rem; }
+            .projet-section { padding: 1.5rem; }
+            .defis-grid { grid-template-columns: 1fr; }
+            .projet-meta { gap: 1rem; }
+            .schema-container pre { font-size: 0.65rem; }
+            .component-table { font-size: 0.82rem; }
+            .component-table th, .component-table td { padding: 0.5rem 0.7rem; }
+            .competences-list { grid-template-columns: 1fr 1fr; }
+            .galerie-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .projet-header h1 { font-size: 1.5rem; }
+            .competences-list { grid-template-columns: 1fr; }
+            .galerie-grid { grid-template-columns: 1fr; }
+            .etape-item { flex-direction: column; align-items: stretch; }
         }
     </style>
 </head>
 <body>
-    <!-- En-tête / Navigation -->
-    <header>
-        <nav>
-            <div class="logo">R&T Portfolio</div>
-            <ul class="nav-links">
-                <li><a href="../../index.html#accueil">Accueil</a></li>
-                <li><a href="../../index.html#competences">Compétences</a></li>
-                <li><a href="../../index.html#projets-reseaux">Projets Réseaux</a></li>
-                <li><a href="../../index.html#projets-prog">Projets Programmation</a></li>
-                <li><a href="../../index.html#parcours">Parcours</a></li>
-                <li><a href="../../index.html#contact">Contact</a></li>
-            </ul>
-        </nav>
+
+<!-- ========== NAVIGATION ========== -->
+<header>
+    <nav>
+        <div class="logo">R&amp;T Portfolio</div>
+        <ul class="nav-links">
+            <li><a href="../../index.html#accueil">Accueil</a></li>
+            <li><a href="../../index.html#competences">Compétences</a></li>
+            <li><a href="../../index.html#projets-reseaux">Projets Réseaux</a></li>
+            <li><a href="../../index.html#projets-prog">Projets Programmation</a></li>
+            <li><a href="../../index.html#parcours">Parcours</a></li>
+            <li><a href="../../index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- ========== PAGE PROJET ========== -->
+<main class="projet-detail">
+
+    <!-- Retour -->
+    <a href="../../index.html#projets-reseaux" class="back-link">← Retour aux projets réseaux</a>
+
+    <!-- ===== EN-TÊTE ===== -->
+    <header class="projet-header">
+        <span class="icon">🔒</span>
+        <h1>VPN Personnel avec OpenVPN &amp; Kali Linux</h1>
+        <p class="sous-titre">
+            Conception et déploiement d'une infrastructure VPN auto-hébergée<br/>
+            pour un accès sécurisé à distance
+        </p>
+        <div class="projet-badges">
+            <span class="badge">OpenVPN</span>
+            <span class="badge">Kali Linux</span>
+            <span class="badge">SSL/TLS</span>
+            <span class="badge">NAT</span>
+            <span class="badge">iptables</span>
+            <span class="badge">Easy-RSA</span>
+        </div>
+        <div class="projet-meta">
+            <span>📅 2026</span>
+            <span>👤 Projet personnel</span>
+            <span>⏱️ 2 semaines</span>
+            <span>📶 Auto-hébergé</span>
+        </div>
     </header>
 
-    <main class="projet-detail">
-        <!-- Lien retour -->
-        <a href="../../index.html#projets-reseaux" class="back-link">← Retour aux projets réseaux</a>
+    <!-- ===== CONTEXTE ===== -->
+    <section class="projet-section">
+        <h2>📌 Contexte &amp; Objectif</h2>
+        <p>
+            Dans le cadre de ma formation en <strong>Réseaux Informatiques et Télécommunications</strong>,
+            j'ai souhaité mettre en place un <strong>VPN personnel</strong> pour répondre à plusieurs besoins :
+        </p>
+        <ul>
+            <li><strong>Accès sécurisé :</strong> Me connecter à mon réseau domestique depuis l'extérieur</li>
+            <li><strong>Confidentialité :</strong> Chiffrer mes communications sur les réseaux publics (Wi-Fi, 4G/5G)</li>
+            <li><strong>Autonomie :</strong> Garder le contrôle total de mon infrastructure</li>
+            <li><strong>Apprentissage :</strong> Maîtriser les technologies VPN, PKI, NAT et iptables</li>
+        </ul>
+        <p>
+            L'objectif final était d'obtenir une <strong>connexion VPN fonctionnelle</strong> depuis un smartphone
+            vers un serveur hébergé sur une machine <strong>Kali Linux</strong> connectée à une <strong>Livebox Orange</strong>.
+        </p>
+    </section>
 
-        <!-- 1. En-tête du projet -->
-        <header class="projet-header">
-            <span style="display:inline-block;font-size:3rem;margin-bottom:0.5rem;">🔒</span>
-            <h1>VPN Personnel avec OpenVPN et Kali Linux</h1>
-            <p class="sous-titre">Conception et déploiement d'une infrastructure VPN auto-hébergée pour un accès sécurisé à distance</p>
-            <div class="projet-badges">
-                <span class="badge">OpenVPN</span>
-                <span class="badge">Kali Linux</span>
-                <span class="badge">SSL/TLS</span>
-                <span class="badge">NAT</span>
-                <span class="badge">iptables</span>
-                <span class="badge">Easy-RSA</span>
-            </div>
-            <div class="projet-meta">
-                <span>📅 2026</span>
-                <span>👤 Projet personnel</span>
-                <span>⏱️ 2 semaines</span>
-                <span>📶 Auto-hébergé</span>
-            </div>
-        </header>
+    <!-- ===== ARCHITECTURE ===== -->
+    <section class="projet-section">
+        <h2>🏗️ Architecture Technique</h2>
+        <p>Voici l'architecture globale du système :</p>
 
-        <!-- 2. Contexte & Objectif -->
-        <section class="projet-section">
-            <h2>📌 Contexte & Objectif</h2>
-            <p>
-                Dans le cadre de ma formation en <strong>Réseaux Informatiques et Télécommunications</strong>,
-                j'ai souhaité mettre en place un <strong>VPN personnel</strong> pour répondre à plusieurs besoins :
-            </p>
-            <ul style="margin:1rem 0;padding-left:1.5rem;line-height:1.8;">
-                <li><strong>Accès sécurisé :</strong> Me connecter à mon réseau domestique depuis l'extérieur</li>
-                <li><strong>Confidentialité :</strong> Chiffrer mes communications sur les réseaux publics</li>
-                <li><strong>Autonomie :</strong> Garder le contrôle total de mon infrastructure</li>
-                <li><strong>Apprentissage :</strong> Maîtriser les technologies VPN, PKI et NAT</li>
-            </ul>
-            <p>
-                L'objectif final était d'obtenir une <strong>connexion VPN fonctionnelle</strong> depuis un smartphone
-                vers un serveur hébergé sur une machine <strong>Kali Linux</strong> connectée à une <strong>Livebox Orange</strong>.
-            </p>
-        </section>
-
-        <!-- 3. Architecture Technique -->
-        <section class="projet-section">
-            <h2>🏗️ Architecture Technique</h2>
-            <p>Voici l'architecture globale du système :</p>
-
-            <div class="schema-container">
-                <pre style="text-align:left;background:#1a1a2e;color:#e0e0e0;padding:1.5rem;border-radius:8px;font-size:0.9rem;overflow-x:auto;">
+        <div class="schema-container">
+            <pre>
 ┌──────────────────────────────────────────────────────────────────────┐
 │                         📱 TÉLÉPHONE                               │
 │                    OpenVPN Connect (Android)                       │
@@ -418,7 +506,7 @@
 │                              │                                       │
 │                              ▼                                       │
 │  ┌─────────────────────────────────────────────────────────────┐    │
-│  │                 NAT & IP FORWARDING (iptables)              │    │
+│  │                 NAT &amp; IP FORWARDING (iptables)            │    │
 │  │  - MASQUERADE du réseau 10.8.0.0/24                         │    │
 │  │  - Forwarding activé (net.ipv4.ip_forward=1)                │    │
 │  └─────────────────────────────────────────────────────────────┘    │
@@ -428,273 +516,275 @@
 │  │              ACCÈS INTERNET via la box Orange               │    │
 │  └─────────────────────────────────────────────────────────────┘    │
 └──────────────────────────────────────────────────────────────────────┘</pre>
-                <p class="schema-legend">📌 <strong>Légende :</strong> Le tunnel VPN permet au téléphone d'accéder à Internet via la connexion de la box Orange</p>
-            </div>
+            <p class="schema-legend">
+                📌 <strong>Légende :</strong> Le tunnel VPN permet au téléphone d'accéder à Internet
+                via la connexion de la box Orange.
+            </p>
+        </div>
 
-            <h3>🛠️ Composants techniques</h3>
-            <table class="component-table">
-                <thead>
-                    <tr>
-                        <th>Composant</th>
-                        <th>Rôle</th>
-                        <th>Technologie</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Client VPN</strong></td>
-                        <td>Appareil mobile se connectant au VPN</td>
-                        <td>OpenVPN Connect (Android)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>DNS Dynamique</strong></td>
-                        <td>Association d'un nom de domaine à l'IP publique</td>
-                        <td>DuckDNS</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Livebox Orange</strong></td>
-                        <td>Redirection du port 1194/UDP vers le serveur</td>
-                        <td>NAT / PAT</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Serveur VPN</strong></td>
-                        <td>Hébergement du service OpenVPN</td>
-                        <td>Kali Linux + OpenVPN</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Gestion des certificats</strong></td>
-                        <td>Création de la PKI (CA, certs, clés)</td>
-                        <td>Easy-RSA</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Firewall & NAT</strong></td>
-                        <td>Routage du trafic des clients VPN</td>
-                        <td>iptables + IP Forwarding</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+        <h3>🛠️ Composants techniques</h3>
+        <table class="component-table">
+            <thead>
+                <tr>
+                    <th>Composant</th>
+                    <th>Rôle</th>
+                    <th>Technologie</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Client VPN</strong></td>
+                    <td>Appareil mobile se connectant au VPN</td>
+                    <td>OpenVPN Connect (Android)</td>
+                </tr>
+                <tr>
+                    <td><strong>DNS Dynamique</strong></td>
+                    <td>Association d'un nom de domaine à l'IP publique</td>
+                    <td>DuckDNS</td>
+                </tr>
+                <tr>
+                    <td><strong>Livebox Orange</strong></td>
+                    <td>Redirection du port 1194/UDP vers le serveur</td>
+                    <td>NAT / PAT</td>
+                </tr>
+                <tr>
+                    <td><strong>Serveur VPN</strong></td>
+                    <td>Hébergement du service OpenVPN</td>
+                    <td>Kali Linux + OpenVPN</td>
+                </tr>
+                <tr>
+                    <td><strong>Gestion des certificats</strong></td>
+                    <td>Création de la PKI (CA, certs, clés)</td>
+                    <td>Easy-RSA</td>
+                </tr>
+                <tr>
+                    <td><strong>Firewall &amp; NAT</strong></td>
+                    <td>Routage du trafic des clients VPN</td>
+                    <td>iptables + IP Forwarding</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
 
-        <!-- 4. Étapes de Réalisation -->
-        <section class="projet-section">
-            <h2>📋 Étapes de Réalisation</h2>
-            <div class="timeline-etapes">
-                <div class="etape-item">
-                    <div class="etape-numero">1</div>
-                    <div class="etape-contenu">
-                        <h4>Installation d'OpenVPN sur Kali</h4>
-                        <p>Utilisation d'un script d'installation automatisé pour déployer OpenVPN</p>
-                        <span class="etape-outils">🔧 git, bash, openvpn</span>
-                    </div>
-                </div>
-                <div class="etape-item">
-                    <div class="etape-numero">2</div>
-                    <div class="etape-contenu">
-                        <h4>Génération des certificats PKI</h4>
-                        <p>Création de l'Autorité de Certification (CA), certificats serveur et client</p>
-                        <span class="etape-outils">🔧 Easy-RSA, OpenSSL</span>
-                    </div>
-                </div>
-                <div class="etape-item">
-                    <div class="etape-numero">3</div>
-                    <div class="etape-contenu">
-                        <h4>Configuration du serveur OpenVPN</h4>
-                        <p>Paramétrage du fichier <code>server.conf</code> (réseau, ports, certificats)</p>
-                        <span class="etape-outils">🔧 /etc/openvpn/server.conf</span>
-                    </div>
-                </div>
-                <div class="etape-item">
-                    <div class="etape-numero">4</div>
-                    <div class="etape-contenu">
-                        <h4>Configuration NAT & IP Forwarding</h4>
-                        <p>Activation du routage IP et mise en place des règles iptables</p>
-                        <span class="etape-outils">🔧 sysctl, iptables</span>
-                    </div>
-                </div>
-                <div class="etape-item">
-                    <div class="etape-numero">5</div>
-                    <div class="etape-contenu">
-                        <h4>Redirection de ports sur la Livebox</h4>
-                        <p>Ouverture du port 1194/UDP et redirection vers le serveur Kali</p>
-                        <span class="etape-outils">🔧 Interface Livebox (NAT/PAT)</span>
-                    </div>
-                </div>
-                <div class="etape-item">
-                    <div class="etape-numero">6</div>
-                    <div class="etape-contenu">
-                        <h4>Création du fichier client .ovpn</h4>
-                        <p>Intégration des certificats et clés dans un fichier unique pour mobile</p>
-                        <span class="etape-outils">🔧 OpenVPN, éditeur texte</span>
-                    </div>
-                </div>
-                <div class="etape-item">
-                    <div class="etape-numero">7</div>
-                    <div class="etape-contenu">
-                        <h4>Test et validation</h4>
-                        <p>Connexion depuis un smartphone via OpenVPN Connect</p>
-                        <span class="etape-outils">📱 Android, OpenVPN Connect</span>
-                    </div>
+    <!-- ===== ÉTAPES ===== -->
+    <section class="projet-section">
+        <h2>📋 Étapes de Réalisation</h2>
+        <div class="timeline-etapes">
+            <div class="etape-item">
+                <div class="etape-numero">1</div>
+                <div class="etape-contenu">
+                    <h4>Installation d'OpenVPN sur Kali</h4>
+                    <p>Utilisation d'un script d'installation automatisé pour déployer OpenVPN</p>
+                    <span class="etape-outils">🔧 git, bash, openvpn</span>
                 </div>
             </div>
-        </section>
-
-        <!-- 5. Défis & Solutions -->
-        <section class="projet-section">
-            <h2>⚡ Défis rencontrés et solutions</h2>
-            <div class="defis-grid">
-                <div class="defi-card">
-                    <p class="defi-titre">💾 Espace disque insuffisant</p>
-                    <p class="defi-desc">Le disque était plein à 100% (19 Go), empêchant toute modification système.</p>
-                </div>
-                <div class="defi-card solution">
-                    <p class="defi-titre">✅ Solution apportée</p>
-                    <p class="defi-desc">Nettoyage en profondeur : suppression des logs, caches APT, noyaux anciens et fichiers inutiles dans /usr.</p>
-                </div>
-                <div class="defi-card">
-                    <p class="defi-titre">🔐 Certificats non générés</p>
-                    <p class="defi-desc">Le script d'installation n'a pas créé automatiquement la PKI.</p>
-                </div>
-                <div class="defi-card solution">
-                    <p class="defi-titre">✅ Solution apportée</p>
-                    <p class="defi-desc">Utilisation manuelle d'Easy-RSA pour générer CA, certificats serveur et client.</p>
-                </div>
-                <div class="defi-card">
-                    <p class="defi-titre">🔧 IP forwarding désactivé</p>
-                    <p class="defi-desc">Le système ne redirigeait pas le trafic des clients VPN.</p>
-                </div>
-                <div class="defi-card solution">
-                    <p class="defi-titre">✅ Solution apportée</p>
-                    <p class="defi-desc">Activation via <code>net.ipv4.ip_forward=1</code> dans /etc/sysctl.conf.</p>
-                </div>
-                <div class="defi-card">
-                    <p class="defi-titre">🌐 NAT mal configuré</p>
-                    <p class="defi-desc">Le trafic des clients VPN ne sortait pas sur Internet.</p>
-                </div>
-                <div class="defi-card solution">
-                    <p class="defi-titre">✅ Solution apportée</p>
-                    <p class="defi-desc">Ajout des règles iptables : MASQUERADE et FORWARD pour le réseau 10.8.0.0/24.</p>
-                </div>
-                <div class="defi-card">
-                    <p class="defi-titre">🏠 Port inaccessible de l'extérieur</p>
-                    <p class="defi-desc">La Livebox bloquait les connexions entrantes sur le port 1194.</p>
-                </div>
-                <div class="defi-card solution">
-                    <p class="defi-titre">✅ Solution apportée</p>
-                    <p class="defi-desc">Configuration d'une règle NAT sur la Livebox : port 1194/UDP → 192.168.11.145.</p>
+            <div class="etape-item">
+                <div class="etape-numero">2</div>
+                <div class="etape-contenu">
+                    <h4>Génération des certificats PKI</h4>
+                    <p>Création de l'Autorité de Certification (CA), certificats serveur et client</p>
+                    <span class="etape-outils">🔧 Easy-RSA, OpenSSL</span>
                 </div>
             </div>
-        </section>
-
-        <!-- 6. Compétences Démontrées -->
-        <section class="projet-section">
-            <h2>💡 Compétences démontrées</h2>
-            <div class="competences-list">
-                <div class="competence-item">
-                    <div class="cat">🖥️ Administration Linux</div>
-                    <div class="skills">Kali Linux, gestion de services, scripts bash</div>
-                </div>
-                <div class="competence-item">
-                    <div class="cat">🔐 Sécurité réseau</div>
-                    <div class="skills">VPN, TLS/SSL, certificats X.509, PKI</div>
-                </div>
-                <div class="competence-item">
-                    <div class="cat">🌐 Configuration réseau</div>
-                    <div class="skills">NAT, routage, IP forwarding, iptables</div>
-                </div>
-                <div class="competence-item">
-                    <div class="cat">🏠 Infrastructure</div>
-                    <div class="skills">Livebox, DNS dynamique (DuckDNS), redirection de ports</div>
-                </div>
-                <div class="competence-item">
-                    <div class="cat">🐍 Automatisation</div>
-                    <div class="skills">Scripts d'installation, gestion des logs</div>
-                </div>
-                <div class="competence-item">
-                    <div class="cat">🔧 Résolution de problèmes</div>
-                    <div class="skills">Diagnostic, optimisation, documentation technique</div>
+            <div class="etape-item">
+                <div class="etape-numero">3</div>
+                <div class="etape-contenu">
+                    <h4>Configuration du serveur OpenVPN</h4>
+                    <p>Paramétrage du fichier <code>server.conf</code> (réseau, ports, certificats)</p>
+                    <span class="etape-outils">🔧 /etc/openvpn/server.conf</span>
                 </div>
             </div>
-        </section>
-
-        <!-- 7. Résultat & Conclusion -->
-        <section class="projet-section">
-            <h2>✅ Résultat & Conclusion</h2>
-            
-            <h3>🏆 État final</h3>
-            <ul style="margin:0.5rem 0 1rem 0;padding-left:1.5rem;line-height:1.8;">
-                <li>✅ VPN fonctionnel accessible depuis un smartphone</li>
-                <li>✅ Connexion sécurisée (AES-256-GCM)</li>
-                <li>✅ Accès à Internet via la box Orange</li>
-                <li>✅ Authentification par certificats X.509</li>
-            </ul>
-
-            <h3>🎯 Bénéfices</h3>
-            <ul style="margin:0.5rem 0 1rem 0;padding-left:1.5rem;line-height:1.8;">
-                <li>🔒 Données chiffrées sur les réseaux publics (Wi-Fi café, hôtel, etc.)</li>
-                <li>🏠 Accès aux ressources domestiques à distance</li>
-                <li>💰 Auto-hébergement sans coût supplémentaire</li>
-                <li>📚 Apprentissage technique approfondi</li>
-            </ul>
-
-            <h3>🚀 Pistes d'amélioration</h3>
-            <ul style="margin:0.5rem 0 0 0;padding-left:1.5rem;line-height:1.8;">
-                <li>Passage à <strong>WireGuard</strong> (plus performant et léger)</li>
-                <li>Mise en place d'un <strong>load balancer</strong> pour la haute disponibilité</li>
-                <li>Intégration d'une solution de <strong>monitoring</strong> (Grafana + Prometheus)</li>
-                <li>Automatisation du déploiement avec <strong>Ansible</strong></li>
-                <li>Utilisation d'un <strong>Raspberry Pi</strong> pour une solution basse consommation</li>
-            </ul>
-        </section>
-
-        <!-- 8. Galerie -->
-        <section class="projet-section">
-            <h2>📸 Galerie</h2>
-            <div class="galerie-grid">
-                <div class="galerie-item">
-                    <div style="background:#e8f5e9;height:200px;display:flex;align-items:center;justify-content:center;font-size:3rem;color:#2e7d32;">
-                        📱
-                    </div>
-                    <div class="caption">OpenVPN Connect - Connexion établie</div>
-                </div>
-                <div class="galerie-item">
-                    <div style="background:#1a1a2e;height:200px;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#e0e0e0;font-family:monospace;padding:1rem;text-align:left;overflow:auto;">
-                        ✅ Initialization<br>Sequence Completed<br><br>📡 UDPv4 link local<br>📡 UDPv4 link remote<br>🔐 TLS handshake OK
-                    </div>
-                    <div class="caption">Logs OpenVPN sur Kali</div>
-                </div>
-                <div class="galerie-item">
-                    <div style="background:#fff3e0;height:200px;display:flex;align-items:center;justify-content:center;font-size:3rem;color:#e65100;">
-                        🏠
-                    </div>
-                    <div class="caption">Configuration NAT Livebox - Port 1194/UDP</div>
-                </div>
-                <div class="galerie-item">
-                    <div style="background:#f3e5f5;height:200px;display:flex;align-items:center;justify-content:center;font-size:3rem;color:#6a1b9a;">
-                        🔐
-                    </div>
-                    <div class="caption">Arborescence des certificats PKI</div>
+            <div class="etape-item">
+                <div class="etape-numero">4</div>
+                <div class="etape-contenu">
+                    <h4>Configuration NAT &amp; IP Forwarding</h4>
+                    <p>Activation du routage IP et mise en place des règles iptables</p>
+                    <span class="etape-outils">🔧 sysctl, iptables</span>
                 </div>
             </div>
-        </section>
-
-        <!-- 9. Liens & Ressources -->
-        <section class="projet-section">
-            <h2>🔗 Liens & Ressources</h2>
-            <div class="ressources-links">
-                <a href="https://github.com/Flavino-Hack/vpn-project" target="_blank">📂 Code source sur GitHub</a>
-                <a href="https://openvpn.net/community-resources/" target="_blank">📖 Documentation OpenVPN</a>
-                <a href="https://www.duckdns.org/" target="_blank">🦆 DuckDNS - DNS dynamique</a>
-                <a href="monvpn.ovpn" download>📄 Télécharger fichier client (exemple)</a>
-                <a href="../../assets/scripts/install-vpn.sh" download>📜 Script d'installation</a>
+            <div class="etape-item">
+                <div class="etape-numero">5</div>
+                <div class="etape-contenu">
+                    <h4>Redirection de ports sur la Livebox</h4>
+                    <p>Ouverture du port 1194/UDP et redirection vers le serveur Kali</p>
+                    <span class="etape-outils">🔧 Interface Livebox (NAT/PAT)</span>
+                </div>
             </div>
-        </section>
-    </main>
+            <div class="etape-item">
+                <div class="etape-numero">6</div>
+                <div class="etape-contenu">
+                    <h4>Création du fichier client .ovpn</h4>
+                    <p>Intégration des certificats et clés dans un fichier unique pour mobile</p>
+                    <span class="etape-outils">🔧 OpenVPN, éditeur texte</span>
+                </div>
+            </div>
+            <div class="etape-item">
+                <div class="etape-numero">7</div>
+                <div class="etape-contenu">
+                    <h4>Test et validation</h4>
+                    <p>Connexion depuis un smartphone via OpenVPN Connect</p>
+                    <span class="etape-outils">📱 Android, OpenVPN Connect</span>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Pied de page -->
-    <footer>
-        <p>© 2026 Wendtoin Guy Flavien KIEMA - Étudiant en Réseaux Informatiques & Télécoms</p>
-    </footer>
+    <!-- ===== DÉFIS ===== -->
+    <section class="projet-section">
+        <h2>⚡ Défis rencontrés &amp; solutions</h2>
+        <div class="defis-grid">
+            <div class="defi-card">
+                <p class="defi-titre">💾 Espace disque insuffisant</p>
+                <p class="defi-desc">Le disque était plein à 100% (19 Go), empêchant toute modification système.</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Nettoyage en profondeur : suppression des logs, caches APT, noyaux anciens et fichiers inutiles dans /usr.</p>
+            </div>
+            <div class="defi-card">
+                <p class="defi-titre">🔐 Certificats non générés</p>
+                <p class="defi-desc">Le script d'installation n'a pas créé automatiquement la PKI.</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Utilisation manuelle d'Easy-RSA pour générer CA, certificats serveur et client.</p>
+            </div>
+            <div class="defi-card">
+                <p class="defi-titre">🔧 IP forwarding désactivé</p>
+                <p class="defi-desc">Le système ne redirigeait pas le trafic des clients VPN.</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Activation via <code>net.ipv4.ip_forward=1</code> dans /etc/sysctl.conf.</p>
+            </div>
+            <div class="defi-card">
+                <p class="defi-titre">🌐 NAT mal configuré</p>
+                <p class="defi-desc">Le trafic des clients VPN ne sortait pas sur Internet.</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Ajout des règles iptables : MASQUERADE et FORWARD pour le réseau 10.8.0.0/24.</p>
+            </div>
+            <div class="defi-card">
+                <p class="defi-titre">🏠 Port inaccessible de l'extérieur</p>
+                <p class="defi-desc">La Livebox bloquait les connexions entrantes sur le port 1194.</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Configuration d'une règle NAT sur la Livebox : port 1194/UDP → 192.168.11.145.</p>
+            </div>
+        </div>
+    </section>
 
-    <script src="../../js/main.js"></script>
+    <!-- ===== COMPÉTENCES ===== -->
+    <section class="projet-section">
+        <h2>💡 Compétences démontrées</h2>
+        <div class="competences-list">
+            <div class="competence-item">
+                <div class="cat">🖥️ Administration Linux</div>
+                <div class="skills">Kali Linux, gestion de services, scripts bash</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🔐 Sécurité réseau</div>
+                <div class="skills">VPN, TLS/SSL, certificats X.509, PKI</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🌐 Configuration réseau</div>
+                <div class="skills">NAT, routage, IP forwarding, iptables</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🏠 Infrastructure</div>
+                <div class="skills">Livebox, DNS dynamique (DuckDNS), redirection de ports</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🐍 Automatisation</div>
+                <div class="skills">Scripts d'installation, gestion des logs</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🔧 Résolution de problèmes</div>
+                <div class="skills">Diagnostic, optimisation, documentation technique</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== RÉSULTAT ===== -->
+    <section class="projet-section">
+        <h2>✅ Résultat &amp; Conclusion</h2>
+
+        <h3>🏆 État final</h3>
+        <ul>
+            <li>✅ VPN fonctionnel accessible depuis un smartphone</li>
+            <li>✅ Connexion sécurisée (AES-256-GCM)</li>
+            <li>✅ Accès à Internet via la box Orange</li>
+            <li>✅ Authentification par certificats X.509</li>
+        </ul>
+
+        <h3>🎯 Bénéfices</h3>
+        <ul>
+            <li>🔒 Données chiffrées sur les réseaux publics (Wi-Fi café, hôtel, etc.)</li>
+            <li>🏠 Accès aux ressources domestiques à distance</li>
+            <li>💰 Auto-hébergement sans coût supplémentaire</li>
+            <li>📚 Apprentissage technique approfondi</li>
+        </ul>
+
+        <h3>🚀 Pistes d'amélioration</h3>
+        <ul>
+            <li>Passage à <strong>WireGuard</strong> (plus performant et léger)</li>
+            <li>Mise en place d'un <strong>load balancer</strong> pour la haute disponibilité</li>
+            <li>Intégration d'une solution de <strong>monitoring</strong> (Grafana + Prometheus)</li>
+            <li>Automatisation du déploiement avec <strong>Ansible</strong></li>
+            <li>Utilisation d'un <strong>Raspberry Pi</strong> pour une solution basse consommation</li>
+        </ul>
+    </section>
+
+    <!-- ===== GALERIE ===== -->
+    <section class="projet-section">
+        <h2>📸 Galerie</h2>
+        <div class="galerie-grid">
+            <div class="galerie-item">
+                <div class="preview green">📱</div>
+                <div class="caption">OpenVPN Connect - Connexion établie</div>
+            </div>
+            <div class="galerie-item">
+                <div class="preview dark">
+                    <span style="font-size:0.7rem;font-family:monospace;text-align:left;display:block;padding:0.5rem;">
+                        ✅ Initialization Sequence Completed<br/>
+                        📡 UDPv4 link local<br/>
+                        📡 UDPv4 link remote<br/>
+                        🔐 TLS handshake OK
+                    </span>
+                </div>
+                <div class="caption">Logs OpenVPN sur Kali</div>
+            </div>
+            <div class="galerie-item">
+                <div class="preview orange">🏠</div>
+                <div class="caption">Configuration NAT Livebox - Port 1194/UDP</div>
+            </div>
+            <div class="galerie-item">
+                <div class="preview purple">🔐</div>
+                <div class="caption">Arborescence des certificats PKI</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== RESSOURCES ===== -->
+    <section class="projet-section">
+        <h2>🔗 Liens &amp; Ressources</h2>
+        <div class="ressources-links">
+            <a href="https://github.com/Flavino-Hack/vpn-project" target="_blank">📂 Code source sur GitHub</a>
+            <a href="https://openvpn.net/community-resources/" target="_blank">📖 Documentation OpenVPN</a>
+            <a href="https://www.duckdns.org/" target="_blank">🦆 DuckDNS - DNS dynamique</a>
+            <a href="monvpn.ovpn" download>📄 Télécharger fichier client (exemple)</a>
+        </div>
+    </section>
+
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+    <p>© 2026 Wendtoin Guy Flavien KIEMA - Étudiant en Réseaux Informatiques &amp; Télécoms</p>
+</footer>
+
+<script src="../../js/main.js"></script>
 </body>
 </html>
