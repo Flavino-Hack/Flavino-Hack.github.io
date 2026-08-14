@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Déploiement d'un assistant IA autonome avec OpenClaw, Ollama et intégration Telegram/WhatsApp." />
+    <title>OpenClaw - Assistant IA Autonome</title>
+    <link rel="stylesheet" href="../../css/style.css" />
+    <style>
+        /* ========== VARIABLES ========== */
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #10b981;
+            --accent-hover: #059669;
+            --accent-light: #d1fae5;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+            --radius: 16px;
+            --transition: 0.3s ease;
+        }
+
+        /* ========== PAGE LAYOUT ========== */
+        .projet-detail {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+        }
+
+        /* ========== BACK LINK ========== */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            margin-bottom: 2rem;
+        }
+        .back-link:hover {
+            color: var(--accent);
+            transform: translateX(-4px);
+        }
+
+        /* ========== HEADER ========== */
+        .projet-header {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--radius);
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .projet-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .projet-header .icon {
+            font-size: 4rem;
+            display: block;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+        .projet-header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #fff;
+            margin: 0.5rem 0;
+            position: relative;
+        }
+        .projet-header .sous-titre {
+            font-size: 1.15rem;
+            color: #94a3b8;
+            max-width: 650px;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+        .projet-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.6rem;
+            position: relative;
+        }
+        .badge {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+            padding: 0.3rem 1.1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(4px);
+        }
+        .projet-meta {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.8rem;
+            margin-top: 1.5rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            position: relative;
+        }
+        .projet-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* ========== SECTIONS ========== */
+        .projet-section {
+            background: var(--white);
+            padding: 2rem 2.2rem;
+            margin: 1.8rem 0;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid #eef2f6;
+            transition: var(--transition);
+        }
+        .projet-section:hover {
+            border-color: var(--accent);
+        }
+        .projet-section h2 {
+            color: var(--primary);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .projet-section h3 {
+            color: var(--text);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.6rem;
+        }
+        .projet-section p {
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+        .projet-section ul {
+            color: var(--text-light);
+            line-height: 1.9;
+            padding-left: 1.5rem;
+        }
+        .projet-section ul li strong {
+            color: var(--text);
+        }
+
+        /* ========== SCHÉMA ========== */
+        .schema-container {
+            background: #0f172a;
+            padding: 2rem 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+        .schema-container pre {
+            color: #e2e8f0;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            margin: 0;
+            white-space: pre;
+        }
+        .schema-container .schema-legend {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            padding-top: 1rem;
+        }
+
+        /* ========== TABLEAU ========== */
+        .component-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        .component-table th {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        .component-table th:first-child { border-radius: 8px 0 0 0; }
+        .component-table th:last-child { border-radius: 0 8px 0 0; }
+        .component-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #eef2f6;
+            color: var(--text-light);
+        }
+        .component-table tr:last-child td { border-bottom: none; }
+        .component-table tr:hover td { background: #f8fafc; }
+        .component-table td strong { color: var(--text); }
+
+        /* ========== TIMELINE ========== */
+        .timeline-etapes {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .etape-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+            padding: 1rem 1.2rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+            transition: var(--transition);
+        }
+        .etape-item:hover {
+            background: #f1f5f9;
+            transform: translateX(4px);
+        }
+        .etape-numero {
+            background: var(--accent);
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        .etape-contenu h4 {
+            margin: 0 0 0.2rem 0;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        .etape-contenu p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 0.92rem;
+        }
+        .etape-contenu .etape-outils {
+            font-size: 0.78rem;
+            color: #94a3b8;
+            margin-top: 0.3rem;
+            display: block;
+        }
+
+        /* ========== DÉFIS ========== */
+        .defis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .defi-card {
+            padding: 1.2rem;
+            border-radius: 12px;
+            border-left: 4px solid #ef4444;
+            background: #fef2f2;
+        }
+        .defi-card.solution {
+            border-left-color: var(--accent);
+            background: var(--accent-light);
+        }
+        .defi-card .defi-titre {
+            font-weight: 700;
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+        .defi-card .defi-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 0.3rem 0 0 0;
+        }
+        .defi-card.solution .defi-titre { color: var(--accent-hover); }
+
+        /* ========== COMPÉTENCES ========== */
+        .competences-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        .competence-item {
+            background: #f8fafc;
+            padding: 1.2rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #eef2f6;
+            transition: var(--transition);
+        }
+        .competence-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        .competence-item .cat {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.95rem;
+        }
+        .competence-item .skills {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 0.3rem;
+        }
+
+        /* ========== CODE BLOCKS ========== */
+        .code-block {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            margin: 0.8rem 0 1.5rem 0;
+            overflow-x: auto;
+            border: 1px solid #1e293b;
+        }
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+        }
+        .code-block code {
+            color: #e2e8f0;
+            font-size: 0.82rem;
+            line-height: 1.7;
+            display: block;
+            white-space: pre;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        .code-block .comment {
+            color: #64748b;
+            font-style: italic;
+        }
+        .code-block .command {
+            color: #10b981;
+        }
+        .code-block .string {
+            color: #fbbf24;
+        }
+        .code-block .variable {
+            color: #60a5fa;
+        }
+        .code-block .red {
+            color: #ef4444;
+        }
+        .code-block .yellow {
+            color: #facc15;
+        }
+
+        /* ========== GALERIE ========== */
+        .galerie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+        .galerie-item {
+            background: #f8fafc;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #eef2f6;
+            transition: var(--transition);
+        }
+        .galerie-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+        }
+        .galerie-item .preview {
+            height: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+            background: #f1f5f9;
+        }
+        .galerie-item .preview.green { background: #d1fae5; }
+        .galerie-item .preview.dark { background: #0f172a; color: #e2e8f0; }
+        .galerie-item .preview.orange { background: #ffedd5; }
+        .galerie-item .preview.purple { background: #f3e8ff; }
+        .galerie-item .caption {
+            padding: 0.8rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* ========== RESSOURCES ========== */
+        .ressources-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .ressources-links a {
+            background: var(--accent-light);
+            color: var(--accent-hover);
+            padding: 0.5rem 1.3rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            transition: var(--transition);
+        }
+        .ressources-links a:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .projet-header h1 { font-size: 2rem; }
+            .projet-header { padding: 2rem 1.2rem; }
+            .projet-section { padding: 1.5rem; }
+            .defis-grid { grid-template-columns: 1fr; }
+            .projet-meta { gap: 1rem; }
+            .schema-container pre { font-size: 0.65rem; }
+            .component-table { font-size: 0.82rem; }
+            .component-table th, .component-table td { padding: 0.5rem 0.7rem; }
+            .competences-list { grid-template-columns: 1fr 1fr; }
+            .galerie-grid { grid-template-columns: 1fr 1fr; }
+            .code-block { padding: 0.8rem 1rem; }
+            .code-block code { font-size: 0.7rem; line-height: 1.5; }
+        }
+        @media (max-width: 480px) {
+            .projet-header h1 { font-size: 1.5rem; }
+            .competences-list { grid-template-columns: 1fr; }
+            .galerie-grid { grid-template-columns: 1fr; }
+            .etape-item { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== NAVIGATION ========== -->
+<header>
+    <nav>
+        <div class="logo">R&amp;T Portfolio</div>
+        <ul class="nav-links">
+            <li><a href="../../index.html#accueil">Accueil</a></li>
+            <li><a href="../../index.html#competences">Compétences</a></li>
+            <li><a href="../../index.html#projets-reseaux">Projets Réseaux</a></li>
+            <li><a href="../../index.html#projets-prog">Projets Programmation</a></li>
+            <li><a href="../../index.html#parcours">Parcours</a></li>
+            <li><a href="../../index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- ========== PAGE PROJET ========== -->
+<main class="projet-detail">
+
+    <!-- Retour -->
+    <a href="../../index.html#projets-prog" class="back-link">← Retour aux projets programmation</a>
+
+    <!-- ===== EN-TÊTE ===== -->
+    <header class="projet-header">
+        <span class="icon">🦞</span>
+        <h1>Assistant IA Autonome avec OpenClaw</h1>
+        <p class="sous-titre">
+            Déploiement d'un agent IA local, accessible via Telegram et WhatsApp<br/>
+            avec un modèle de langage optimisé (phi3:mini) et une infrastructure virtualisée
+        </p>
+        <div class="projet-badges">
+            <span class="badge">OpenClaw</span>
+            <span class="badge">Ollama</span>
+            <span class="badge">phi3:mini</span>
+            <span class="badge">Telegram</span>
+            <span class="badge">WhatsApp</span>
+            <span class="badge">VMware</span>
+            <span class="badge">Ubuntu Server</span>
+            <span class="badge">Node.js</span>
+        </div>
+        <div class="projet-meta">
+            <span>📅 14 août 2026</span>
+            <span>👤 Projet personnel</span>
+            <span>⏱️ 3 semaines</span>
+            <span>📶 Auto-hébergé</span>
+            <span>🖥️ 24 cœurs CPU</span>
+        </div>
+    </header>
+
+    <!-- ===== CONTEXTE ===== -->
+    <section class="projet-section">
+        <h2>📌 Contexte &amp; Objectif</h2>
+        <p>
+            Dans le cadre de ma formation en <strong>Réseaux Informatiques et Télécommunications</strong>,
+            j'ai souhaité développer un <strong>assistant IA autonome</strong> répondant à plusieurs besoins :
+        </p>
+        <ul>
+            <li><strong>Autonomie totale :</strong> Héberger son propre assistant IA sans dépendre de services cloud payants (OpenAI, Anthropic, etc.).</li>
+            <li><strong>Accessibilité multi-canaux :</strong> Pouvoir interagir avec l'assistant depuis <strong>Telegram</strong> et <strong>WhatsApp</strong>, les messageries les plus utilisées.</li>
+            <li><strong>Confidentialité :</strong> Tous les échanges restent sur mon infrastructure, aucune donnée n'est envoyée à des tiers.</li>
+            <li><strong>Apprentissage technique :</strong> Maîtriser le déploiement d'agents IA (OpenClaw), la virtualisation (VMware), l'intégration d'APIs et l'optimisation de modèles de langage.</li>
+        </ul>
+        <p>
+            L'objectif final était d'obtenir un <strong>agent IA fonctionnel</strong>, capable de comprendre et répondre en français,
+            accessible 24h/24 et 7j/7 via Telegram et WhatsApp, avec un temps de réponse inférieur à 3 secondes.
+        </p>
+    </section>
+
+    <!-- ===== ARCHITECTURE ===== -->
+    <section class="projet-section">
+        <h2>🏗️ Architecture Technique</h2>
+        <p>Voici l'architecture globale du système :</p>
+
+        <div class="schema-container">
+            <pre>
+┌──────────────────────────────────────────────────────────────────────┐
+│                         📱 UTILISATEUR                            │
+│              Envoie des messages via Telegram / WhatsApp           │
+└────────────────────────────┬─────────────────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                  ☁️ INTERNET / API TELEGRAM                        │
+│              Les messages arrivent sur le bot                      │
+│              (API Telegram + WhatsApp Web)                        │
+└────────────────────────────┬─────────────────────────────────────────┘
+                             │
+                             ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│              🖥️ VM VMWARE (Ubuntu Server 24.04)                   │
+│              RAM : 6 Go  |  CPU : 24 cœurs (4×6)                  │
+│                                                                     │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │                 OPENCLAW GATEWAY (port 18789)               │    │
+│  │  - Interface Web de contrôle                               │    │
+│  │  - Gestion des canaux Telegram / WhatsApp                  │    │
+│  │  - Routage des messages vers l'agent IA                   │    │
+│  └─────────────────────────┬───────────────────────────────────┘    │
+│                              │                                       │
+│                              ▼                                       │
+│  ┌─────────────────────────────────────────────────────────────┐    │
+│  │              MODÈLE OLLAMA (phi3:mini)                     │    │
+│  │  - Modèle local de 3.8 milliards de paramètres            │    │
+│  │  - Vitesse : ~24 tokens/s                                 │    │
+│  │  - RAM utilisée : ~2.5 Go                                 │    │
+│  │  - Réponse en français (configuré dans SOUL.md)          │    │
+│  └─────────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────────────┘</pre>
+            <p class="schema-legend">
+                📌 <strong>Légende :</strong> L'utilisateur envoie un message via Telegram ou WhatsApp.
+                Le message est reçu par OpenClaw, qui interroge le modèle phi3:mini via Ollama,
+                puis renvoie la réponse à l'utilisateur.
+            </p>
+        </div>
+
+        <h3>🛠️ Composants techniques</h3>
+        <table class="component-table">
+            <thead>
+                <tr>
+                    <th>Composant</th>
+                    <th>Rôle</th>
+                    <th>Technologie</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Agent IA</strong></td>
+                    <td>Orchestrateur des messages et de la logique</td>
+                    <td>OpenClaw 2026.7.1-2</td>
+                </tr>
+                <tr>
+                    <td><strong>Modèle de langage</strong></td>
+                    <td>Génération des réponses</td>
+                    <td>phi3:mini (3.8B) via Ollama</td>
+                </tr>
+                <tr>
+                    <td><strong>Interface Web</strong></td>
+                    <td>Dashboard de contrôle</td>
+                    <td>OpenClaw Control UI (port 18789)</td>
+                </tr>
+                <tr>
+                    <td><strong>Canal Telegram</strong></td>
+                    <td>Réception et envoi de messages</td>
+                    <td>Bot Telegram (@flavien_ai_bot)</td>
+                </tr>
+                <tr>
+                    <td><strong>Canal WhatsApp</strong></td>
+                    <td>Réception et envoi de messages</td>
+                    <td>WhatsApp Web (compte personnel)</td>
+                </tr>
+                <tr>
+                    <td><strong>Virtualisation</strong></td>
+                    <td>Hébergement de l'infrastructure</td>
+                    <td>VMware Workstation Pro</td>
+                </tr>
+                <tr>
+                    <td><strong>Système d'exploitation</strong></td>
+                    <td>Serveur de base</td>
+                    <td>Ubuntu Server 24.04 LTS</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ===== ÉTAPES ===== -->
+    <section class="projet-section">
+        <h2>📋 Étapes de Réalisation</h2>
+        <div class="timeline-etapes">
+            <div class="etape-item">
+                <div class="etape-numero">1</div>
+                <div class="etape-contenu">
+                    <h4>Création et configuration de la VM</h4>
+                    <p>Installation d'Ubuntu Server 24.04 LTS sur VMware avec 6 Go RAM, 24 cœurs CPU et 50 Go de stockage.</p>
+                    <span class="etape-outils">🔧 VMware, Ubuntu Server, ISO 24.04</span>
+                </div>
+            </div>
+            <div class="etape-item">
+                <div class="etape-numero">2</div>
+                <div class="etape-contenu">
+                    <h4>Installation de Node.js et OpenClaw</h4>
+                    <p>Déploiement de Node.js 22.x et installation globale d'OpenClaw via npm.</p>
+                    <span class="etape-outils">🔧 Node.js 22.x, npm, OpenClaw 2026.7.1-2</span>
+                </div>
+            </div>
+            <div class="etape-item">
+                <div class="etape-numero">3</div>
+                <div class="etape-contenu">
+                    <h4>Installation d'Ollama et du modèle phi3:mini</h4>
+                    <p>Installation d'Ollama via script officiel, téléchargement du modèle phi3:mini (2.2 Go).</p>
+                    <span class="etape-outils">🔧 Ollama, phi3:mini, curl</span>
+                </div>
+            </div>
+            <div class="etape-item">
+                <div class="etape-numero">4</div>
+                <div class="etape-contenu">
+                    <h4>Configuration d'OpenClaw (Gateway, authentification)</h4>
+                    <p>Paramétrage du Gateway en mode local, configuration du modèle, mise en place du tunnel SSH pour l'accès web.</p>
+                    <span class="etape-outils">🔧 openclaw config, openclaw gateway run</span>
+                </div>
+            </div>
+            <div class="etape-item">
+                <div class="etape-numero">5</div>
+                <div class="etape-contenu">
+                    <h4>Intégration de Telegram</h4>
+                    <p>Création du bot @flavien_ai_bot avec BotFather, configuration du token et approbation des utilisateurs.</p>
+                    <span class="etape-outils">🔧 BotFather, openclaw config channels.telegram</span>
+                </div>
+            </div>
+            <div class="etape-item">
+                <div class="etape-numero">6</div>
+                <div class="etape-contenu">
+                    <h4>Intégration de WhatsApp</h4>
+                    <p>Ajout du plugin WhatsApp via ClawHub, scan du QR code, liaison du compte personnel (+22664931693).</p>
+                    <span class="etape-outils">🔧 openclaw channels add, WhatsApp Web</span>
+                </div>
+            </div>
+            <div class="etape-item">
+                <div class="etape-numero">7</div>
+                <div class="etape-contenu">
+                    <h4>Optimisation et tests</h4>
+                    <p>Tests de performance, optimisation du modèle, mise en place du keep-alive, personnalisation de la langue (français).</p>
+                    <span class="etape-outils">🔧 openclaw infer model run, OLLAMA_KEEP_ALIVE</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== COMMANDES EXÉCUTÉES ===== -->
+    <section class="projet-section">
+        <h2>💻 Commandes exécutées</h2>
+        <p>
+            Voici l'ensemble des commandes utilisées pour la mise en place du projet,
+            organisées par ordre chronologique et commentées.
+        </p>
+
+        <!-- Étape 1 : Préparation -->
+        <h3>📦 1. Préparation de la VM</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Mise à jour du système</span>
+sudo apt update && sudo apt upgrade -y
+
+<span class="comment"># Installation des outils essentiels</span>
+sudo apt install -y curl git build-essential</code></pre>
+        </div>
+
+        <!-- Étape 2 : Installation Node.js -->
+        <h3>🟢 2. Installation de Node.js 22.x</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Ajout du dépôt NodeSource</span>
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+
+<span class="comment"># Installation</span>
+sudo apt install -y nodejs
+
+<span class="comment"># Vérification</span>
+node --version  <span class="comment"># v22.23.2</span>
+npm --version   <span class="comment"># 10.9.8</span></code></pre>
+        </div>
+
+        <!-- Étape 3 : Installation OpenClaw -->
+        <h3>🦞 3. Installation d'OpenClaw</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Installation globale (avec sudo pour éviter les erreurs de permission)</span>
+sudo npm install -g openclaw@latest
+
+<span class="comment"># Vérification</span>
+openclaw --version  <span class="comment"># OpenClaw 2026.7.1-2 (0790d9f)</span></code></pre>
+        </div>
+
+        <!-- Étape 4 : Installation Ollama -->
+        <h3>📥 4. Installation d'Ollama et téléchargement du modèle</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Installation d'Ollama</span>
+curl -fsSL https://ollama.com/install.sh | sh
+
+<span class="comment"># Téléchargement du modèle phi3:mini (2.2 Go)</span>
+ollama pull phi3:mini
+
+<span class="comment"># Démarrage d'Ollama en arrière-plan avec keep-alive</span>
+OLLAMA_KEEP_ALIVE=10m ollama serve > /dev/null 2>&1 &
+
+<span class="comment"># Vérification</span>
+curl http://localhost:11434  <span class="comment"># Ollama is running</span>
+ollama list  <span class="comment"># phi3:mini présent</span></code></pre>
+        </div>
+
+        <!-- Étape 5 : Configuration OpenClaw -->
+        <h3>⚙️ 5. Configuration d'OpenClaw</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Configuration du modèle</span>
+openclaw config set models.providers.ollama.api ollama
+openclaw config set models.providers.ollama.baseUrl "http://localhost:11434"
+openclaw config set models.providers.ollama.models '[{"id":"phi3:mini","name":"Phi3 Mini"}]'
+
+<span class="comment"># Configuration du Gateway (mode local)</span>
+openclaw config set gateway.mode local
+openclaw config set gateway.bind loopback
+openclaw config set gateway.auth.mode none
+
+<span class="comment"># Démarrage du Gateway</span>
+openclaw gateway run</code></pre>
+        </div>
+
+        <!-- Étape 6 : Tunnel SSH -->
+        <h3>🔌 6. Tunnel SSH pour l'accès au dashboard</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Depuis Windows (PowerShell)</span>
+ssh -N -L 18789:127.0.0.1:18789 flavino@192.168.1.66
+
+<span class="comment"># Dashboard accessible sur : http://127.0.0.1:18789/</span></code></pre>
+        </div>
+
+        <!-- Étape 7 : Intégration Telegram -->
+        <h3>📱 7. Intégration de Telegram</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Ajout du token du bot</span>
+openclaw config set channels.telegram.botToken "8733023801:AAHulrQqhWPs4TOqwby9jAPIUwPu_3J2Cdo"
+openclaw config set channels.telegram.enabled true
+
+<span class="comment"># Approbation de l'utilisateur</span>
+openclaw pairing approve telegram RDP2NSTB
+
+<span class="comment"># Vérification</span>
+openclaw channels status --channel telegram</code></pre>
+        </div>
+
+        <!-- Étape 8 : Intégration WhatsApp -->
+        <h3>💬 8. Intégration de WhatsApp</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Ajout du canal WhatsApp</span>
+openclaw channels add
+<span class="comment"># Sélectionner WhatsApp (QR link)</span>
+<span class="comment"># Scanner le QR code avec WhatsApp Mobile</span>
+
+<span class="comment"># Configurer le mode self-chat</span>
+openclaw config set channels.whatsapp.selfChatMode true
+
+<span class="comment"># Autoriser le plugin</span>
+openclaw config set plugins.allow '["whatsapp"]'</code></pre>
+        </div>
+
+        <!-- Étape 9 : Test -->
+        <h3>🧪 9. Test de l'assistant</h3>
+        <div class="code-block">
+            <pre><code><span class="comment"># Test via CLI</span>
+openclaw infer model run --model ollama/phi3:mini --prompt "Bonjour"
+
+<span class="comment"># Voir les logs en direct</span>
+openclaw logs --follow</code></pre>
+        </div>
+    </section>
+
+    <!-- ===== DÉFIS ===== -->
+    <section class="projet-section">
+        <h2>⚡ Défis rencontrés &amp; solutions</h2>
+        <div class="defis-grid">
+            <div class="defi-card">
+                <p class="defi-titre">🔐 Accès au GPU en VM</p>
+                <p class="defi-desc">La RTX 4060 de l'hôte n'était pas accessible directement dans la VM VMware.</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Utilisation d'un modèle léger (<code>phi3:mini</code>) optimisé pour le CPU. Vitesse : 24 tokens/s, parfaitement fluide pour une conversation.</p>
+            </div>
+            <div class="defi-card">
+                <p class="defi-titre">📦 Erreur de permission npm</p>
+                <p class="defi-desc">Impossible d'installer OpenClaw globalement (<code>EACCES</code>).</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Installation avec <code>sudo npm install -g openclaw@latest</code>. Le binaire est bien installé dans <code>/usr/lib/node_modules/openclaw</code>.</p>
+            </div>
+            <div class="defi-card">
+                <p class="defi-titre">🔑 Authentification du dashboard</p>
+                <p class="defi-desc">Le dashboard refusait la connexion (<code>token_missing</code>, <code>password_missing</code>).</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Passage en mode <code>gateway.auth.mode none</code> avec <code>gateway.bind loopback</code> et tunnel SSH pour un accès sécurisé en local.</p>
+            </div>
+            <div class="defi-card">
+                <p class="defi-titre">🐢 Lenteur de Mistral 7B</p>
+                <p class="defi-desc">Le modèle <code>mistral:7b</code> tournait à 11 tokens/s sur CPU, rendant la conversation peu fluide.</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Migration vers <code>phi3:mini</code> (3.8B), plus rapide (24 tokens/s) et consommant moins de RAM (2.5 Go).</p>
+            </div>
+            <div class="defi-card">
+                <p class="defi-titre">🔌 Plugin WhatsApp non autorisé</p>
+                <p class="defi-desc">Le plugin WhatsApp se chargeait mais était bloqué (<code>plugins.allow is empty</code>).</p>
+            </div>
+            <div class="defi-card solution">
+                <p class="defi-titre">✅ Solution apportée</p>
+                <p class="defi-desc">Ajout de <code>"plugins": { "allow": ["whatsapp"] }</code> dans la configuration OpenClaw.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== COMPÉTENCES ===== -->
+    <section class="projet-section">
+        <h2>💡 Compétences démontrées</h2>
+        <div class="competences-list">
+            <div class="competence-item">
+                <div class="cat">🖥️ Administration Linux</div>
+                <div class="skills">Ubuntu Server 24.04, gestion de services, scripts bash</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🧠 IA &amp; LLM</div>
+                <div class="skills">Déploiement local (Ollama), phi3:mini, optimisation CPU</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🌐 Virtualisation</div>
+                <div class="skills">VMware, allocation de ressources (RAM, CPU)</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🔌 Intégration API</div>
+                <div class="skills">Telegram Bot API, WhatsApp Web, webhooks</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🔐 Sécurité réseau</div>
+                <div class="skills">Tunnel SSH, gestion des tokens, isolation réseau</div>
+            </div>
+            <div class="competence-item">
+                <div class="cat">🐍 Programmation</div>
+                <div class="skills">Node.js, npm, scripts d'installation</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== RÉSULTAT ===== -->
+    <section class="projet-section">
+        <h2>✅ Résultat &amp; Conclusion</h2>
+
+        <h3>🏆 État final</h3>
+        <ul>
+            <li>✅ Assistant IA accessible 24h/24 via <strong>Telegram</strong> (<a href="https://t.me/flavien_ai_bot" target="_blank">@flavien_ai_bot</a>)</li>
+            <li>✅ Assistant IA accessible via <strong>WhatsApp</strong> (compte personnel +22664931693)</li>
+            <li>✅ Dashboard de contrôle accessible : <code>http://127.0.0.1:18789/</code></li>
+            <li>✅ Modèle <code>phi3:mini</code> optimisé pour le CPU (24 tokens/s)</li>
+            <li>✅ Réponses en français (configuré dans <code>SOUL.md</code>)</li>
+            <li>✅ Infrastructure entièrement auto-hébergée et maîtrisée</li>
+        </ul>
+
+        <h3>🎯 Bénéfices</h3>
+        <ul>
+            <li>🔒 <strong>Confidentialité totale :</strong> Aucune donnée ne quitte l'infrastructure personnelle.</li>
+            <li>💰 <strong>Économies :</strong> Pas d'abonnement à des services cloud payants.</li>
+            <li>📚 <strong>Apprentissage :</strong> Maîtrise des technologies IA, virtualisation et intégration.</li>
+            <li>🔧 <strong>Flexibilité :</strong> Possibilité d'ajouter des canaux supplémentaires (Discord, Slack, etc.).</li>
+        </ul>
+
+        <h3>🚀 Pistes d'amélioration</h3>
+        <ul>
+            <li>Ajout de <strong>skills personnalisés</strong> : météo, rappels, requêtes API, veille info.</li>
+            <li>Intégration d'un <strong>modèle plus performant</strong> (qwen2.5:7b) si la RAM le permet.</li>
+            <li>Mise en place d'un <strong>monitoring</strong> (logs, performances, alertes).</li>
+            <li>Déploiement continu via <strong>GitHub Actions</strong> pour automatiser les mises à jour.</li>
+            <li>Migration vers <strong>WireGuard</strong> pour l'accès distant sécurisé (complément au VPN personnel).</li>
+        </ul>
+    </section>
+
+    <!-- ===== GALERIE ===== -->
+    <section class="projet-section">
+        <h2>📸 Galerie</h2>
+        <div class="galerie-grid">
+            <div class="galerie-item">
+                <div class="preview green">🦞</div>
+                <div class="caption">Dashboard OpenClaw - Interface de contrôle</div>
+            </div>
+            <div class="galerie-item">
+                <div class="preview dark">
+                    <span style="font-size:0.7rem;font-family:monospace;text-align:left;display:block;padding:0.5rem;">
+                        ✅ Gateway running<br/>
+                        🔐 Auth mode: none<br/>
+                        📡 Agent: phi3:mini<br/>
+                        💬 Telegram: connected<br/>
+                        💬 WhatsApp: connected
+                    </span>
+                </div>
+                <div class="caption">Logs OpenClaw - Services actifs</div>
+            </div>
+            <div class="galerie-item">
+                <div class="preview orange">📱</div>
+                <div class="caption">Conversation sur Telegram (@flavien_ai_bot)</div>
+            </div>
+            <div class="galerie-item">
+                <div class="preview purple">💬</div>
+                <div class="caption">Conversation sur WhatsApp (compte personnel)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== RESSOURCES ===== -->
+    <section class="projet-section">
+        <h2>🔗 Liens &amp; Ressources</h2>
+        <div class="ressources-links">
+            <a href="https://github.com/Flavino-Hack/openclaw-assistant" target="_blank">📂 Code source sur GitHub</a>
+            <a href="https://openclaw.ai" target="_blank">📖 Documentation OpenClaw</a>
+            <a href="https://ollama.com" target="_blank">📖 Documentation Ollama</a>
+            <a href="https://core.telegram.org/bots" target="_blank">📖 API Telegram Bot</a>
+            <a href="https://t.me/flavien_ai_bot" target="_blank">🤖 Tester le bot sur Telegram</a>
+        </div>
+    </section>
+
+</main>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+    <p>© 2026 Wendtoin Guy Flavien KIEMA - Étudiant en Réseaux Informatiques &amp; Télécoms</p>
+</footer>
+
+<script src="../../js/main.js"></script>
+</body>
+</html>
