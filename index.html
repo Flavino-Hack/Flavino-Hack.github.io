@@ -59,6 +59,7 @@
             font-size: 1.4rem;
             font-weight: 700;
             letter-spacing: 0.5px;
+            cursor: pointer;
         }
         .logo span { color: var(--accent); }
         .nav-links {
@@ -429,7 +430,9 @@
 <!-- ===== HEADER ===== -->
 <header>
     <nav>
-        <div class="logo">R&amp;T <span>Portfolio</span></div>
+        <a href="#accueil" style="text-decoration:none; color:inherit;">
+            <div class="logo">R&amp;T <span>Portfolio</span></div>
+        </a>
         <ul class="nav-links">
             <li><a href="#accueil">Accueil</a></li>
             <li><a href="#competences">Compétences</a></li>
@@ -506,6 +509,13 @@
             <p>Conception d'un réseau d'entreprise avec 3 sites interconnectés en OSPF, VLAN, DHCP relay et ACLs sous GNS3.</p>
             <div class="tech-tags"><span>Cisco</span><span>OSPF</span><span>VLAN</span><span>GNS3</span></div>
             <a href="#" class="btn-small">Voir la topologie →</a>
+        </div>
+        <div class="projet-card">
+            <div class="projet-image">🔒</div>
+            <h3>VPN Personnel OpenVPN + Kali</h3>
+            <p>Mise en place d'un serveur VPN auto-hébergé avec Kali Linux, redirection NAT, certificats SSL/TLS et accès sécurisé à distance depuis un smartphone.</p>
+            <div class="tech-tags"><span>OpenVPN</span><span>Kali Linux</span><span>NAT</span><span>SSL/TLS</span><span>iptables</span></div>
+            <a href="projets/vpn-personnel/" class="btn-small">Voir le projet →</a>
         </div>
         <div class="projet-card">
             <div class="projet-image">📡</div>
@@ -721,7 +731,6 @@
                 <textarea id="message" name="message" rows="5" placeholder="Votre message..." required></textarea>
             </div>
             <input type="hidden" name="_captcha" value="true">
-            <input type="hidden" name="_next" value="https://flavino-hack.github.io/merci.html">
             <button type="submit" class="btn btn-primary">
                 <i class="fas fa-paper-plane"></i> Envoyer le message
             </button>
