@@ -162,31 +162,6 @@
             color: var(--text);
         }
 
-        /* ========== SCHÉMA ========== */
-        .schema-container {
-            background: #0f172a;
-            padding: 2rem 1.5rem;
-            border-radius: 12px;
-            margin: 1.5rem 0;
-            overflow-x: auto;
-        }
-        .schema-container pre {
-            color: #e2e8f0;
-            font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 0.8rem;
-            line-height: 1.6;
-            margin: 0;
-            white-space: pre;
-        }
-        .schema-container .schema-legend {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            margin-top: 1rem;
-            text-align: center;
-            border-top: 1px solid #1e293b;
-            padding-top: 1rem;
-        }
-
         /* ========== TABLEAU ========== */
         .component-table {
             width: 100%;
@@ -357,7 +332,7 @@
             background: var(--white);
         }
 
-        /* ========== LIGHTBOX (OVERLAY) ========== */
+        /* ========== LIGHTBOX ========== */
         .lightbox {
             display: none;
             position: fixed;
@@ -485,7 +460,6 @@
             .projet-section { padding: 1.5rem; }
             .defis-grid { grid-template-columns: 1fr; }
             .projet-meta { gap: 1rem; }
-            .schema-container pre { font-size: 0.65rem; }
             .component-table { font-size: 0.82rem; }
             .component-table th, .component-table td { padding: 0.5rem 0.7rem; }
             .competences-list { grid-template-columns: 1fr 1fr; }
@@ -561,7 +535,7 @@
         </p>
         <ul>
             <li><strong>Accès sécurisé :</strong> Me connecter à mon réseau domestique depuis l'extérieur</li>
-            <li><strong>Confidentialité :</strong> Chiffrer mes communications sur les réseaux publics (Wi-Fi, 4G/5G)</li>
+            <li><strong>Confidentialité :</strong> Chiffrer mes communications sur les réseaux publics</li>
             <li><strong>Autonomie :</strong> Garder le contrôle total de mon infrastructure</li>
             <li><strong>Apprentissage :</strong> Maîtriser les technologies VPN, PKI, NAT et iptables</li>
         </ul>
@@ -571,59 +545,18 @@
         </p>
     </section>
 
-    <!-- ===== ARCHITECTURE ===== -->
+    <!-- ===== ARCHITECTURE AVEC IMAGE ===== -->
     <section class="projet-section">
         <h2>🏗️ Architecture Technique</h2>
         <p>Voici l'architecture globale du système :</p>
 
-        <div class="schema-container">
-            <pre>
-┌──────────────────────────────────────────────────────────────────────┐
-│                         📱 TÉLÉPHONE                               │
-│                    OpenVPN Connect (Android)                       │
-│                      Données mobiles 4G/5G                         │
-└────────────────────────────┬─────────────────────────────────────────┘
-                             │
-                             ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                         ☁️ INTERNET                                │
-│              Résolution DNS : monvpn.duckdns.org                    │
-│                    → IP publique: 102.179.234.178                   │
-└────────────────────────────┬─────────────────────────────────────────┘
-                             │
-                             ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                   🏠 LIVEBOX ORANGE (192.168.1.1)                  │
-│                Redirection NAT : Port 1194/UDP                      │
-│                   → 192.168.11.145:1194                            │
-└────────────────────────────┬─────────────────────────────────────────┘
-                             │
-                             ▼
-┌──────────────────────────────────────────────────────────────────────┐
-│                 🐧 KALI LINUX (192.168.11.145)                     │
-│                                                                     │
-│  ┌─────────────────────────────────────────────────────────────┐    │
-│  │                 SERVEUR OpenVPN (10.8.0.1)                  │    │
-│  │  - Port UDP 1194                                            │    │
-│  │  - Certificats SSL/TLS (AES-256-GCM)                        │    │
-│  │  - Authentification par certificats X.509                    │    │
-│  └─────────────────────────────────────────────────────────────┘    │
-│                              │                                       │
-│                              ▼                                       │
-│  ┌─────────────────────────────────────────────────────────────┐    │
-│  │                 NAT &amp; IP FORWARDING (iptables)            │    │
-│  │  - MASQUERADE du réseau 10.8.0.0/24                         │    │
-│  │  - Forwarding activé (net.ipv4.ip_forward=1)                │    │
-│  └─────────────────────────────────────────────────────────────┘    │
-│                              │                                       │
-│                              ▼                                       │
-│  ┌─────────────────────────────────────────────────────────────┐    │
-│  │              ACCÈS INTERNET via la box Orange               │    │
-│  └─────────────────────────────────────────────────────────────┘    │
-└──────────────────────────────────────────────────────────────────────┘</pre>
-            <p class="schema-legend">
-                📌 <strong>Légende :</strong> Le tunnel VPN permet au téléphone d'accéder à Internet
-                via la connexion de la box Orange.
+        <div style="text-align:center; margin: 1.5rem 0; background:#f8fafc; border-radius:12px; padding:1rem; border:1px solid #eef2f6;">
+            <img src="../../images/projets/vpn-personnel/architecture.png" 
+                 alt="Architecture du VPN" 
+                 style="max-width:100%; height:auto; border-radius:8px; cursor:pointer;"
+                 onclick="window.open(this.src,'_blank')">
+            <p style="color:#94a3b8; font-size:0.85rem; margin-top:0.5rem;">
+                📌 Cliquez sur l'image pour l'agrandir
             </p>
         </div>
 
@@ -766,14 +699,10 @@ echo "&lt;/key&gt;" >> monvpn.ovpn</code></pre></div>
         </ul>
     </section>
 
-    <!-- ===== GALERIE AVEC LIGHTBOX ===== -->
+    <!-- ===== GALERIE ===== -->
     <section class="projet-section">
         <h2>📸 Galerie</h2>
         <div class="galerie-grid">
-            <div class="galerie-item" data-src="../../images/projets/vpn-personnel/architecture.png">
-                <img src="../../images/projets/vpn-personnel/architecture.png" alt="Architecture du VPN" loading="lazy">
-                <div class="caption">🏗️ Architecture technique du VPN</div>
-            </div>
             <div class="galerie-item" data-src="../../images/projets/vpn-personnel/connexion_telephone1.jpeg">
                 <img src="../../images/projets/vpn-personnel/connexion_telephone1.jpeg" alt="Connexion VPN sur téléphone" loading="lazy">
                 <div class="caption">📱 Connexion OpenVPN Connect sur Android</div>
@@ -845,7 +774,6 @@ echo "&lt;/key&gt;" >> monvpn.ovpn</code></pre></div>
         const lightboxCaption = document.getElementById('lightboxCaption');
         const closeBtn = document.getElementById('closeLightbox');
 
-        // Tous les éléments de la galerie
         const galleryItems = document.querySelectorAll('.galerie-item');
 
         galleryItems.forEach(item => {
@@ -856,11 +784,10 @@ echo "&lt;/key&gt;" >> monvpn.ovpn</code></pre></div>
                 lightboxImg.src = imgSrc;
                 lightboxCaption.textContent = captionText;
                 lightbox.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Empêche le scroll
+                document.body.style.overflow = 'hidden';
             });
         });
 
-        // Fermeture : clic sur le bouton ou en dehors de l'image
         function closeLightbox() {
             lightbox.classList.remove('active');
             document.body.style.overflow = '';
@@ -873,7 +800,6 @@ echo "&lt;/key&gt;" >> monvpn.ovpn</code></pre></div>
             }
         });
 
-        // Touche Échap pour fermer
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && lightbox.classList.contains('active')) {
                 closeLightbox();
