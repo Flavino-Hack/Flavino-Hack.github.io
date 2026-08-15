@@ -144,9 +144,24 @@
         }
         .code-block .comment { color: #64748b; font-style: italic; }
         .code-block .command { color: #10b981; }
-        .component-table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.95rem; }
-        .component-table th { background: var(--primary); color: #fff; padding: 0.8rem 1rem; text-align: left; font-weight: 600; }
-        .component-table td { padding: 0.8rem 1rem; border-bottom: 1px solid #eef2f6; color: var(--text-light); }
+        .component-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+        .component-table th {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        .component-table td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #eef2f6;
+            color: var(--text-light);
+        }
         .component-table tr:last-child td { border-bottom: none; }
         .component-table tr:hover td { background: #f8fafc; }
         .component-table td strong { color: var(--text); }
@@ -200,33 +215,112 @@
         .competence-item:hover { border-color: var(--accent); transform: translateY(-2px); }
         .competence-item .cat { font-weight: 700; color: var(--primary); font-size: 0.95rem; }
         .competence-item .skills { font-size: 0.85rem; color: var(--text-light); margin-top: 0.3rem; }
+
+        /* ===== GALERIE AVEC LIGHTBOX ===== */
         .galerie-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.2rem;
         }
         .galerie-item {
-            background: #f8fafc;
+            background: var(--white);
             border-radius: 12px;
             overflow: hidden;
             border: 1px solid #eef2f6;
             transition: var(--transition);
+            cursor: pointer;
         }
-        .galerie-item:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+        .galerie-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+            border-color: var(--accent);
+        }
         .galerie-item img {
             width: 100%;
-            height: 200px;
+            height: 180px;
             object-fit: cover;
             display: block;
+            transition: var(--transition);
+        }
+        .galerie-item:hover img {
+            transform: scale(1.02);
         }
         .galerie-item .caption {
-            padding: 0.8rem;
+            padding: 0.7rem 1rem;
             text-align: center;
             font-size: 0.85rem;
             color: var(--text-light);
             font-weight: 500;
+            background: var(--white);
         }
-        .ressources-links { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.92);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 85%;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+        .lightbox.active img {
+            transform: scale(1);
+        }
+        .lightbox .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0.7;
+        }
+        .lightbox .close-btn:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+        .lightbox .caption-lightbox {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #94a3b8;
+            font-size: 0.95rem;
+            background: rgba(15, 23, 42, 0.7);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .ressources-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
         .ressources-links a {
             background: var(--accent-light);
             color: var(--accent-hover);
@@ -238,7 +332,12 @@
             border: 1px solid rgba(16, 185, 129, 0.2);
             transition: var(--transition);
         }
-        .ressources-links a:hover { background: var(--accent); color: #fff; transform: translateY(-2px); }
+        .ressources-links a:hover {
+            background: var(--accent);
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .projet-header h1 { font-size: 2rem; }
             .projet-header { padding: 2rem 1.2rem; }
@@ -247,6 +346,7 @@
             .galerie-grid { grid-template-columns: 1fr 1fr; }
             .code-block { padding: 0.8rem 1rem; }
             .code-block code { font-size: 0.7rem; line-height: 1.5; }
+            .lightbox img { max-width: 95%; max-height: 80%; }
         }
         @media (max-width: 480px) {
             .projet-header h1 { font-size: 1.5rem; }
@@ -256,21 +356,28 @@
     </style>
 </head>
 <body>
+
+<!-- ========== NAVIGATION ========== -->
 <header>
     <nav>
-        <div class="logo">R&amp;T Portfolio</div>
+        <a href="#accueil" style="text-decoration:none; color:inherit;">
+          <div class="logo">R&amp;T <span>Portfolio</span></div>
+       </a>
         <ul class="nav-links">
             <li><a href="../../index.html#accueil">Accueil</a></li>
             <li><a href="../../index.html#competences">Compétences</a></li>
             <li><a href="../../index.html#projets-reseaux">Projets Réseaux</a></li>
             <li><a href="../../index.html#projets-prog">Projets Programmation</a></li>
+            <li><a href="../../index.html#experiences">Expériences</a></li>
             <li><a href="../../index.html#parcours">Parcours</a></li>
             <li><a href="../../index.html#contact">Contact</a></li>
         </ul>
     </nav>
 </header>
 
+<!-- ========== PAGE PROJET ========== -->
 <main class="projet-detail">
+
     <a href="../../index.html#projets-prog" class="back-link">← Retour aux projets programmation</a>
 
     <header class="projet-header">
@@ -295,9 +402,13 @@
         </div>
     </header>
 
+    <!-- ===== CONTEXTE ===== -->
     <section class="projet-section">
         <h2>📌 Contexte &amp; Objectif</h2>
-        <p>Dans le cadre de ma formation en <strong>Réseaux Informatiques et Télécommunications</strong>, j'ai souhaité développer un <strong>assistant IA autonome</strong> répondant à plusieurs besoins :</p>
+        <p>
+            Dans le cadre de ma formation en <strong>Réseaux Informatiques et Télécommunications</strong>,
+            j'ai souhaité développer un <strong>assistant IA autonome</strong> répondant à plusieurs besoins :
+        </p>
         <ul>
             <li><strong>Autonomie totale :</strong> Héberger son propre assistant IA sans dépendre de services cloud payants.</li>
             <li><strong>Accessibilité multi-canaux :</strong> Pouvoir interagir avec l'assistant depuis <strong>Telegram</strong> et <strong>WhatsApp</strong>.</li>
@@ -306,12 +417,12 @@
         </ul>
     </section>
 
+    <!-- ===== ARCHITECTURE ===== -->
     <section class="projet-section">
         <h2>🏗️ Architecture Technique</h2>
         <div style="text-align:center; margin: 1.5rem 0;">
-            <img src="../../images/projets/openclaw-assistant/architecture.png" alt="Architecture OpenClaw" style="max-width:100%; border-radius:12px; border:1px solid #eef2f6;">
+            <img src="../../images/projets/openclaw-assistant/architecture.png" alt="Architecture OpenClaw" style="max-width:100%; border-radius:12px; border:1px solid #eef2f6; cursor:pointer;" onclick="openLightbox(this.src, 'Architecture technique du système')">
         </div>
-
         <h3>🛠️ Composants techniques</h3>
         <table class="component-table">
             <thead><tr><th>Composant</th><th>Rôle</th><th>Technologie</th></tr></thead>
@@ -327,6 +438,7 @@
         </table>
     </section>
 
+    <!-- ===== ÉTAPES ===== -->
     <section class="projet-section">
         <h2>📋 Étapes de Réalisation</h2>
         <div class="timeline-etapes">
@@ -340,6 +452,7 @@
         </div>
     </section>
 
+    <!-- ===== COMMANDES ===== -->
     <section class="projet-section">
         <h2>💻 Commandes exécutées</h2>
         <h3>📦 1. Préparation de la VM</h3>
@@ -347,44 +460,38 @@
 sudo apt update && sudo apt upgrade -y
 <span class="comment"># Installation des outils essentiels</span>
 sudo apt install -y curl git build-essential</code></div>
-
         <h3>🟢 2. Installation de Node.js 22.x</h3>
         <div class="code-block"><code><span class="comment"># Ajout du dépôt NodeSource</span>
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 node --version  <span class="comment"># v22.23.2</span></code></div>
-
         <h3>🦞 3. Installation d'OpenClaw</h3>
         <div class="code-block"><code>sudo npm install -g openclaw@latest
 openclaw --version  <span class="comment"># OpenClaw 2026.7.1-2</span></code></div>
-
         <h3>📥 4. Installation d'Ollama</h3>
         <div class="code-block"><code>curl -fsSL https://ollama.com/install.sh | sh
 ollama pull phi3:mini
 OLLAMA_KEEP_ALIVE=10m ollama serve > /dev/null 2>&1 &</code></div>
-
         <h3>⚙️ 5. Configuration d'OpenClaw</h3>
         <div class="code-block"><code>openclaw config set models.providers.ollama.api ollama
 openclaw config set models.providers.ollama.baseUrl "http://localhost:11434"
 openclaw config set models.providers.ollama.models '[{"id":"phi3:mini","name":"Phi3 Mini"}]'
 openclaw config set gateway.mode local
 openclaw gateway run</code></div>
-
         <h3>📱 6. Intégration de Telegram</h3>
         <div class="code-block"><code>openclaw config set channels.telegram.botToken "8733023801:AAHulrQqhWPs4TOqwby9jAPIUwPu_3J2Cdo"
 openclaw config set channels.telegram.enabled true
 openclaw pairing approve telegram RDP2NSTB</code></div>
-
         <h3>💬 7. Intégration de WhatsApp</h3>
         <div class="code-block"><code>openclaw channels add
 <span class="comment"># Sélectionner WhatsApp (QR link), scanner le QR code</span>
 openclaw config set plugins.allow '["whatsapp"]'</code></div>
-
         <h3>🧪 8. Test de l'assistant</h3>
         <div class="code-block"><code>openclaw infer model run --model ollama/phi3:mini --prompt "Bonjour"
 openclaw logs --follow</code></div>
     </section>
 
+    <!-- ===== DÉFIS ===== -->
     <section class="projet-section">
         <h2>⚡ Défis rencontrés &amp; solutions</h2>
         <div class="defis-grid">
@@ -399,6 +506,7 @@ openclaw logs --follow</code></div>
         </div>
     </section>
 
+    <!-- ===== COMPÉTENCES ===== -->
     <section class="projet-section">
         <h2>💡 Compétences démontrées</h2>
         <div class="competences-list">
@@ -411,6 +519,7 @@ openclaw logs --follow</code></div>
         </div>
     </section>
 
+    <!-- ===== RÉSULTAT ===== -->
     <section class="projet-section">
         <h2>✅ Résultat &amp; Conclusion</h2>
         <h3>🏆 État final</h3>
@@ -430,36 +539,38 @@ openclaw logs --follow</code></div>
         </ul>
     </section>
 
+    <!-- ===== GALERIE AVEC LIGHTBOX ===== -->
     <section class="projet-section">
         <h2>📸 Galerie</h2>
         <div class="galerie-grid">
-            <div class="galerie-item">
-                <img src="../../images/projets/openclaw-assistant/dashboard.png" alt="Dashboard OpenClaw">
-                <div class="caption">Dashboard OpenClaw - Interface de contrôle</div>
+            <div class="galerie-item" data-src="../../images/projets/openclaw-assistant/dashboard.png">
+                <img src="../../images/projets/openclaw-assistant/dashboard.png" alt="Dashboard OpenClaw" loading="lazy">
+                <div class="caption">🦞 Dashboard OpenClaw - Interface de contrôle</div>
             </div>
-            <div class="galerie-item">
-                <img src="../../images/projets/openclaw-assistant/logs.png" alt="Logs OpenClaw">
-                <div class="caption">Logs OpenClaw - Services actifs</div>
+            <div class="galerie-item" data-src="../../images/projets/openclaw-assistant/logs.png">
+                <img src="../../images/projets/openclaw-assistant/logs.png" alt="Logs OpenClaw" loading="lazy">
+                <div class="caption">📋 Logs OpenClaw - Services actifs</div>
             </div>
-            <div class="galerie-item">
-                <img src="../../images/projets/openclaw-assistant/telegram_conversation.png" alt="Conversation Telegram">
-                <div class="caption">Conversation sur Telegram (@flavien_ai_bot)</div>
+            <div class="galerie-item" data-src="../../images/projets/openclaw-assistant/telegram_conversation.png">
+                <img src="../../images/projets/openclaw-assistant/telegram_conversation.png" alt="Conversation Telegram" loading="lazy">
+                <div class="caption">💬 Conversation sur Telegram (@flavien_ai_bot)</div>
             </div>
-            <div class="galerie-item">
-                <img src="../../images/projets/openclaw-assistant/whatsapp_conversation.jpeg" alt="Conversation WhatsApp">
-                <div class="caption">Conversation sur WhatsApp (compte personnel)</div>
+            <div class="galerie-item" data-src="../../images/projets/openclaw-assistant/whatsapp_conversation.jpeg">
+                <img src="../../images/projets/openclaw-assistant/whatsapp_conversation.jpeg" alt="Conversation WhatsApp" loading="lazy">
+                <div class="caption">💬 Conversation sur WhatsApp (compte personnel)</div>
             </div>
-            <div class="galerie-item">
-                <img src="../../images/projets/openclaw-assistant/whatsapp_configuration.png" alt="Configuration WhatsApp">
-                <div class="caption">Configuration WhatsApp - Scan du QR code</div>
+            <div class="galerie-item" data-src="../../images/projets/openclaw-assistant/whatsapp_configuration.png">
+                <img src="../../images/projets/openclaw-assistant/whatsapp_configuration.png" alt="Configuration WhatsApp" loading="lazy">
+                <div class="caption">⚙️ Configuration WhatsApp - Scan du QR code</div>
             </div>
-            <div class="galerie-item">
-                <img src="../../images/projets/openclaw-assistant/telegram_bot_initialisation.png" alt="Création du bot Telegram">
-                <div class="caption">Création du bot Telegram avec BotFather</div>
+            <div class="galerie-item" data-src="../../images/projets/openclaw-assistant/telegram_bot_initialisation.png">
+                <img src="../../images/projets/openclaw-assistant/telegram_bot_initialisation.png" alt="Création du bot Telegram" loading="lazy">
+                <div class="caption">🤖 Création du bot Telegram avec BotFather</div>
             </div>
         </div>
     </section>
 
+    <!-- ===== RESSOURCES ===== -->
     <section class="projet-section">
         <h2>🔗 Liens &amp; Ressources</h2>
         <div class="ressources-links">
@@ -470,11 +581,72 @@ openclaw logs --follow</code></div>
             <a href="https://t.me/flavien_ai_bot" target="_blank">🤖 Tester le bot sur Telegram</a>
         </div>
     </section>
+
 </main>
 
+<!-- ========== LIGHTBOX ========== -->
+<div class="lightbox" id="lightbox">
+    <button class="close-btn" id="closeLightbox">&times;</button>
+    <img id="lightboxImg" src="" alt="Agrandissement">
+    <div class="caption-lightbox" id="lightboxCaption"></div>
+</div>
+
+<!-- ========== FOOTER ========== -->
 <footer>
     <p>© 2026 Wendtoin Guy Flavien KIEMA - Étudiant en Réseaux Informatiques &amp; Télécoms</p>
 </footer>
-<script src="../../js/main.js"></script>
+
+<!-- ========== JAVASCRIPT LIGHTBOX ========== -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+        const closeBtn = document.getElementById('closeLightbox');
+
+        const galleryItems = document.querySelectorAll('.galerie-item');
+
+        galleryItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                const imgSrc = this.dataset.src;
+                const captionText = this.querySelector('.caption')?.textContent || '';
+                lightboxImg.src = imgSrc;
+                lightboxCaption.textContent = captionText;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        closeBtn.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+                closeLightbox();
+            }
+        });
+    });
+
+    // Fonction pour l'image d'architecture (clic direct)
+    function openLightbox(src, caption) {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+        lightboxImg.src = src;
+        lightboxCaption.textContent = caption || '';
+        lightbox.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+</script>
+
 </body>
 </html>
