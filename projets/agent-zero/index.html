@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Agent Zero - Assistant IA Autonome avec Docker, Google Gemini et OpenRouter">
+    <title>Agent Zero - Assistant IA Autonome</title>
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .project-hero {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            color: #fff;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 0 0 40px 40px;
+            margin: -2rem -1.5rem 2rem;
+        }
+        .project-hero h1 { font-size: 2.8rem; margin-bottom: 0.5rem; }
+        .project-hero .highlight { color: #10b981; }
+        .project-hero p { color: #94a3b8; font-size: 1.2rem; max-width: 700px; margin: 0 auto; }
+        .project-content { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem; }
+        .project-section {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            border: 1px solid #eef2f6;
+        }
+        .project-section h2 {
+            color: #0f172a;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #10b981;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        .project-section h3 { color: #1e293b; margin: 1.5rem 0 0.5rem; }
+        .project-section p { color: #475569; line-height: 1.8; }
+        .project-section ul { list-style: none; padding: 0; }
+        .project-section ul li {
+            padding: 0.5rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+            color: #475569;
+            line-height: 1.7;
+        }
+        .project-section ul li::before {
+            content: "▸";
+            color: #10b981;
+            font-weight: 700;
+            position: absolute;
+            left: 0;
+        }
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 1rem 0;
+        }
+        .tech-tags span {
+            background: #d1fae5;
+            color: #059669;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin: 1.2rem 0;
+        }
+        .gallery img {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid #eef2f6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .gallery img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+        .gallery .caption {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.3rem;
+            font-weight: 500;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: #10b981;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .back-link:hover { color: #059669; transform: translateX(-4px); }
+        .difficulty-box {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            margin: 0.5rem 0 1rem;
+        }
+        .difficulty-box h4 { color: #991b1b; margin-bottom: 0.2rem; font-size: 0.95rem; }
+        .difficulty-box p { color: #7f1d1d; font-size: 0.9rem; margin: 0; }
+        .solution-box {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            margin: 0.5rem 0 1rem;
+        }
+        .solution-box h4 { color: #065f46; margin-bottom: 0.2rem; font-size: 0.95rem; }
+        .solution-box p { color: #065f46; font-size: 0.9rem; margin: 0; }
+        .success-box {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .success-box h4 { color: #065f46; margin-bottom: 0.3rem; }
+        .success-box p { color: #065f46; font-size: 0.95rem; }
+        .warning-box {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+        .warning-box h4 { color: #92400e; margin-bottom: 0.3rem; }
+        .warning-box p { color: #78350f; font-size: 0.95rem; }
+        @media (max-width: 768px) {
+            .project-hero h1 { font-size: 1.8rem; }
+            .gallery { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header>
+    <nav>
+        <a href="../../index.html" style="text-decoration:none; color:inherit;">
+            <div class="logo">R&amp;T <span>Portfolio</span></div>
+        </a>
+        <ul class="nav-links">
+            <li><a href="../../index.html#accueil">Accueil</a></li>
+            <li><a href="../../index.html#competences">Compétences</a></li>
+            <li><a href="../../index.html#projets-reseaux">Projets Réseaux</a></li>
+            <li><a href="../../index.html#projets-prog">Projets Programmation</a></li>
+            <li><a href="../../index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- ===== HERO PROJET ===== -->
+<section class="project-hero">
+    <h1>🤖 Agent Zero <span class="highlight">Assistant IA Autonome</span></h1>
+    <p>Déploiement d'un agent IA conversationnel autonome avec Docker, Google Gemini et OpenRouter</p>
+    <div class="tech-tags" style="justify-content:center; margin-top:1.5rem;">
+        <span>🐍 Python</span>
+        <span>🐳 Docker</span>
+        <span>🤖 Gemini</span>
+        <span>🌐 OpenRouter</span>
+        <span>🖥️ Kali Linux</span>
+        <span>🔧 Supervisor</span>
+        <span>📦 Flask</span>
+    </div>
+</section>
+
+<!-- ===== CONTENU ===== -->
+<div class="project-content">
+
+    <!-- 1. INTRODUCTION -->
+    <div class="project-section">
+        <h2>📖 Introduction</h2>
+        <p>
+            <strong>Agent Zero</strong> est un framework d'agent IA autonome qui permet de dialoguer avec des modèles de langage
+            via une interface web. Ce projet consiste à déployer Agent Zero dans un conteneur Docker Kali Linux,
+            configurer l'accès à des modèles IA (Google Gemini et OpenRouter), et tester l'assistant.
+        </p>
+        <h3>🎯 Objectifs</h3>
+        <ul>
+            <li>Déployer Agent Zero avec Docker sur Kali Linux</li>
+            <li>Configurer l'accès à des modèles IA (Gemini / OpenRouter)</li>
+            <li>Tester et interagir avec l'agent via l'interface web</li>
+            <li>Documenter les difficultés rencontrées et les solutions apportées</li>
+        </ul>
+    </div>
+
+    <!-- 2. ARCHITECTURE -->
+    <div class="project-section">
+        <h2>🏗️ Architecture du projet</h2>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/20.jpeg" alt="Architecture Agent Zero">
+                <div class="caption">Architecture technique du déploiement Agent Zero</div>
+            </div>
+        </div>
+        <h3>Composants principaux</h3>
+        <ul>
+            <li><strong>Agent Zero</strong> : Framework d'agent IA autonome</li>
+            <li><strong>Docker</strong> : Conteneurisation de l'application</li>
+            <li><strong>Google Gemini</strong> : Modèle IA (version gratuite)</li>
+            <li><strong>OpenRouter</strong> : Passerelle d'accès aux modèles IA</li>
+            <li><strong>Supervisor</strong> : Gestion des processus dans le conteneur</li>
+        </ul>
+        <h3>Flux de données</h3>
+        <ul>
+            <li>L'utilisateur accède à l'interface web via son navigateur</li>
+            <li>Le conteneur Docker héberge Agent Zero, l'API et les services</li>
+            <li>Agent Zero se connecte à Google Gemini via l'API pour les réponses</li>
+            <li>OpenRouter est testé comme alternative mais nécessite des crédits</li>
+        </ul>
+    </div>
+
+    <!-- 3. ÉTAPES DU DÉPLOIEMENT -->
+    <div class="project-section">
+        <h2>📋 Étapes du déploiement</h2>
+
+        <h3>Lancement du conteneur Docker</h3>
+        <p>
+            Lancement du conteneur Docker à partir de l'image <code>frdel/agent-zero-run:latest</code>.
+            Le conteneur expose les ports 80 (interface web) et 22 (SSH). Les services sont gérés par Supervisor.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/1.png" alt="Lancement Docker">
+                <div class="caption">Lancement du conteneur Docker</div>
+            </div>
+        </div>
+
+        <h3>Accès à l'interface web</h3>
+        <p>
+            L'interface web est accessible sur le port <strong>32769</strong> (mappage automatique du port 80).
+            L'interface affiche les paramètres de l'agent et permet de commencer une conversation.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/2.png" alt="Interface web">
+                <div class="caption">Interface web Agent Zero</div>
+            </div>
+        </div>
+
+        <h3>Configuration des paramètres généraux</h3>
+        <p>
+            Accès aux paramètres de l'agent pour configurer les répertoires de prompts,
+            de mémoire et de connaissances.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/3.png" alt="Paramètres généraux">
+                <div class="caption">Configuration des paramètres généraux</div>
+            </div>
+        </div>
+
+        <h3>Configuration de la clé API OpenRouter</h3>
+        <p>
+            Ajout de la clé API OpenRouter dans la section "API Keys".
+            OpenRouter permet d'accéder à de nombreux modèles via une seule API.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/4.png" alt="API Keys OpenRouter">
+                <div class="caption">Ajout de la clé API OpenRouter</div>
+            </div>
+        </div>
+
+        <h3>Configuration du modèle de conversation</h3>
+        <p>
+            Configuration du modèle principal avec OpenRouter. Sélection du modèle <code>gpt-4.1</code>
+            avec une fenêtre de contexte de 100 000 tokens.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/5.png" alt="Chat Model OpenRouter">
+                <div class="caption">Configuration du Chat Model avec OpenRouter</div>
+            </div>
+        </div>
+
+        <h3>Test avec OpenRouter - Erreur 402</h3>
+        <p>
+            Premier test de l'assistant avec OpenRouter. Le test échoue avec une <strong>erreur 402 Payment Required</strong>.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/6.png" alt="Erreur OpenRouter">
+                <div class="caption">Erreur 402 : crédits insuffisants</div>
+            </div>
+        </div>
+        <div class="difficulty-box">
+            <h4>⚠️ Difficulté rencontrée</h4>
+            <p><strong>Erreur :</strong> "This request requires more credits, or fewer max_tokens. You requested up to 65536 tokens, but can only afford 5000."</p>
+            <p><strong>Cause :</strong> OpenRouter ne propose plus de modèles gratuits. Il faut ajouter des crédits.</p>
+        </div>
+        <div class="solution-box">
+            <h4>✅ Solution</h4>
+            <p>Passage à Google Gemini qui propose une version gratuite avec 20 requêtes par jour.</p>
+        </div>
+
+        <h3>Configuration de Google Gemini</h3>
+        <p>
+            Changement du fournisseur de <strong>OpenRouter</strong> vers <strong>Google Gemini</strong>,
+            qui offre une version gratuite avec un quota de 20 requêtes par jour.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/7.png" alt="Configuration Gemini">
+                <div class="caption">Sélection de Google comme fournisseur</div>
+            </div>
+        </div>
+
+        <h3>Ajout de la clé API Google Gemini</h3>
+        <p>
+            Ajout de la clé API obtenue depuis <strong>Google AI Studio</strong>.
+            La clé est gratuite et permet d'utiliser Gemini 3.6 Flash.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/8.png" alt="API Key Gemini">
+                <div class="caption">Ajout de la clé API Google Gemini</div>
+            </div>
+        </div>
+
+        <h3>Configuration du Chat Model avec Gemini</h3>
+        <p>
+            Configuration du modèle principal avec <code>gemini-3.6-flash</code>.
+            Fenêtre de contexte réduite à 8000 tokens pour respecter les limites gratuites.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/9.png" alt="Chat Model Gemini">
+                <div class="caption">Configuration du Chat Model avec Gemini</div>
+            </div>
+        </div>
+
+        <h3>Configuration du modèle utilitaire</h3>
+        <p>
+            Configuration du modèle utilitaire avec le même modèle <code>gemini-3.6-flash</code>
+            pour les tâches secondaires (organisation de la mémoire, résumé, etc.).
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/10.png" alt="Utility Model Gemini">
+                <div class="caption">Configuration du modèle utilitaire</div>
+            </div>
+        </div>
+
+        <h3>Configuration du modèle de navigation web</h3>
+        <p>
+            Configuration du modèle de navigation web pour les interactions avec le navigateur intégré.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/11.png" alt="Web Browser Model">
+                <div class="caption">Configuration du modèle de navigation</div>
+            </div>
+        </div>
+
+        <h3>Test réussi avec Gemini 🎉</h3>
+        <p>
+            Premier test de l'assistant avec Gemini. La réponse est obtenue avec succès :
+            <strong>"Hello! How can I help you today?"</strong>
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/12.png" alt="Test réussi">
+                <div class="caption">Première réponse de Gemini</div>
+            </div>
+        </div>
+        <div class="success-box">
+            <h4>✅ Succès !</h4>
+            <p>La configuration avec Google Gemini fonctionne parfaitement.</p>
+        </div>
+
+        <h3>Erreur 429 - Quota dépassé</h3>
+        <p>
+            Après plusieurs tests, l'erreur <strong>429 Too Many Requests</strong> apparaît.
+            Le quota gratuit de 20 requêtes par jour est atteint.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/13.png" alt="Erreur 429">
+                <div class="caption">Erreur 429 : quota dépassé</div>
+            </div>
+        </div>
+        <div class="warning-box">
+            <h4>⚠️ Limite atteinte</h4>
+            <p><strong>Message :</strong> "Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20"</p>
+            <p><strong>Cause :</strong> Le compte gratuit Gemini est limité à 20 requêtes par jour.</p>
+        </div>
+        <div class="solution-box">
+            <h4>✅ Solutions possibles</h4>
+            <p>1. Attendre 24h pour la réinitialisation du quota.</p>
+            <p>2. Ajouter une carte bancaire sur Google Cloud pour augmenter le quota.</p>
+            <p>3. Utiliser plusieurs comptes Google pour multiplier les requêtes.</p>
+            <p>4. Passer à un modèle local avec Ollama.</p>
+        </div>
+
+        <h3>Analyse des logs d'erreur</h3>
+        <p>
+            Consultation des logs de l'application pour comprendre l'erreur 429.
+            Les logs montrent la trace complète de l'erreur.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/14.png" alt="Logs d'erreur">
+                <div class="caption">Logs de l'erreur 429</div>
+            </div>
+        </div>
+
+        <h3>Historique des conversations</h3>
+        <p>
+            Visualisation de l'historique des conversations avec l'assistant.
+            Les échanges sont bien enregistrés dans l'interface.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/15.png" alt="Conversations">
+                <div class="caption">Historique des échanges</div>
+            </div>
+        </div>
+
+        <h3>Interface web fonctionnelle</h3>
+        <p>
+            L'interface web est pleinement opérationnelle. Tous les services sont en cours d'exécution
+            et l'assistant est prêt à répondre.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/16.png" alt="Interface fonctionnelle">
+                <div class="caption">Interface web fonctionnelle</div>
+            </div>
+        </div>
+
+        <h3>Tests de fonctionnalités</h3>
+        <p>
+            Tests supplémentaires des fonctionnalités de l'assistant : réponses en français,
+            qualité des réponses, temps de réponse.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/17.png" alt="Tests">
+                <div class="caption">Validation des fonctionnalités</div>
+            </div>
+        </div>
+
+        <h3>Bilan du projet</h3>
+        <p>
+            Bilan complet du déploiement d'Agent Zero : succès de la configuration,
+            difficultés rencontrées, solutions apportées et perspectives d'amélioration.
+        </p>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/18.png" alt="Bilan">
+                <div class="caption">Bilan du projet</div>
+            </div>
+        </div>
+
+        <h3>Résumé des étapes</h3>
+        <div class="gallery">
+            <div>
+                <img src="../../images/projets/agent-zero/19.png" alt="Résumé">
+                <div class="caption">Résumé des étapes du déploiement</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. RÉSULTATS -->
+    <div class="project-section">
+        <h2>📊 Résultats et apprentissages</h2>
+        <h3>Résultats obtenus</h3>
+        <ul>
+            <li>✅ Agent Zero est déployé avec succès dans un conteneur Docker Kali Linux</li>
+            <li>✅ L'interface web est accessible et fonctionnelle</li>
+            <li>✅ Google Gemini est configuré et répond correctement</li>
+            <li>✅ OpenRouter est testé mais nécessite des crédits</li>
+            <li>✅ Compréhension des quotas des versions gratuites (20 requêtes/jour)</li>
+        </ul>
+        <h3>Difficultés rencontrées et solutions</h3>
+        <div class="difficulty-box">
+            <h4>Difficulté 1 : OpenRouter payant</h4>
+            <p><strong>Problème :</strong> Erreur 402 - crédits insuffisants sur OpenRouter.</p>
+            <p><strong>Solution :</strong> Passage à Google Gemini (version gratuite).</p>
+        </div>
+        <div class="difficulty-box">
+            <h4>Difficulté 2 : Quota Gemini dépassé</h4>
+            <p><strong>Problème :</strong> Erreur 429 - 20 requêtes/jour atteintes.</p>
+            <p><strong>Solution :</strong> Attendre 24h, ajouter une carte bancaire, ou utiliser plusieurs comptes.</p>
+        </div>
+        <div class="success-box">
+            <h4>✅ Leçon apprise</h4>
+            <p>
+                Les modèles IA gratuits ont des limites (OpenRouter supprime ses modèles gratuits,
+                Gemini limite à 20 requêtes/jour). Pour une utilisation intensive, il est préférable
+                d'utiliser un modèle local avec Ollama ou un compte payant.
+            </p>
+        </div>
+    </div>
+
+    <!-- 5. PERSPECTIVES -->
+    <div class="project-section">
+        <h2>🚀 Perspectives d'amélioration</h2>
+        <ul>
+            <li><strong>Modèles locaux :</strong> Installer Ollama et utiliser des modèles 100% gratuits et sans quota (Llama 3, Mistral, Phi, etc.)</li>
+            <li><strong>Déploiement cloud :</strong> Héberger Agent Zero sur un serveur VPS avec un domaine personnalisé</li>
+            <li><strong>Intégrations :</strong> Connecter l'assistant à des outils de productivité (email, calendrier, etc.)</li>
+            <li><strong>Sécurité :</strong> Ajouter une authentification renforcée pour l'interface web</li>
+            <li><strong>Personnalisation :</strong> Adapter les prompts pour des cas d'usage spécifiques (réseaux, télécoms, cybersécurité)</li>
+        </ul>
+    </div>
+
+    <!-- 6. CONCLUSION -->
+    <div class="project-section">
+        <h2>🎯 Conclusion</h2>
+        <div class="success-box">
+            <h4>✅ Projet réussi !</h4>
+            <p>
+                Agent Zero a été déployé avec succès dans un conteneur Docker Kali Linux.
+                L'assistant IA autonome fonctionne parfaitement avec Google Gemini, offrant une interface web
+                accessible et une expérience de conversation fluide.
+            </p>
+            <p>
+                Ce projet a permis de maîtriser Docker, la configuration d'API IA,
+                la gestion des quotas et l'optimisation des paramètres. Il constitue une base solide
+                pour des projets d'IA et d'automatisation plus avancés.
+            </p>
+        </div>
+    </div>
+
+    <!-- Lien retour -->
+    <a href="../../index.html#projets-prog" class="back-link">
+        <i class="fas fa-arrow-left"></i> Retour aux projets
+    </a>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    <p>© 2026 Wendtoin Guy Flavien KIEMA - Étudiant en Réseaux Informatiques &amp; Télécoms</p>
+    <p style="font-size:0.75rem; margin-top:0.3rem;">Agent Zero - Assistant IA Autonome</p>
+</footer>
+
+</body>
+</html>

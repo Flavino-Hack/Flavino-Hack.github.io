@@ -210,7 +210,8 @@
         .projet-image img {
             width: 60px;
             height: 60px;
-            object-fit: contain;
+            object-fit: cover;
+            border-radius: 8px;
         }
         .projet-card h3 { color: var(--primary); font-size: 1.2rem; margin-bottom: 0.5rem; }
         .projet-card p { color: var(--text-light); font-size: 0.95rem; line-height: 1.6; }
@@ -508,24 +509,23 @@
             <h3>Architecture réseau multi-sites</h3>
             <p>Conception d'un réseau d'entreprise avec 3 sites interconnectés en OSPF, VLAN, DHCP relay et ACLs sous GNS3.</p>
             <div class="tech-tags"><span>Cisco</span><span>OSPF</span><span>VLAN</span><span>GNS3</span></div>
-            <a href="#" class="btn-small">Voir la topologie →</a>
+            <a href="projets/reseau-multi-sites/" class="btn-small">Voir la topologie →</a>
         </div>
-        <!-- Carte VPN avec logo -->
         <div class="projet-card">
-    <div class="projet-image">
-        <img src="images/projets/vpn-personnel/logo.png" alt="Logo VPN" style="width:60px; height:60px; object-fit:contain;">
-    </div>
-    <h3>VPN Personnel OpenVPN + Kali</h3>
-    <p>Mise en place d'un serveur VPN auto-hébergé avec Kali Linux, redirection NAT, certificats SSL/TLS et accès sécurisé à distance depuis un smartphone.</p>
-    <div class="tech-tags">
-        <span>OpenVPN</span>
-        <span>Kali Linux</span>
-        <span>NAT</span>
-        <span>SSL/TLS</span>
-        <span>iptables</span>
-    </div>
-    <a href="projets/vpn-personnel/" class="btn-small">Voir le projet →</a>
-    </div>
+            <div class="projet-image">
+                <img src="images/projets/vpn-personnel/logo.png" alt="Logo VPN" style="width:60px; height:60px; object-fit:contain;">
+            </div>
+            <h3>VPN Personnel OpenVPN + Kali</h3>
+            <p>Mise en place d'un serveur VPN auto-hébergé avec Kali Linux, redirection NAT, certificats SSL/TLS et accès sécurisé à distance depuis un smartphone.</p>
+            <div class="tech-tags">
+                <span>OpenVPN</span>
+                <span>Kali Linux</span>
+                <span>NAT</span>
+                <span>SSL/TLS</span>
+                <span>iptables</span>
+            </div>
+            <a href="projets/vpn-personnel/" class="btn-small">Voir le projet →</a>
+        </div>
         <div class="projet-card">
             <div class="projet-image">📡</div>
             <h3>Simulation réseau avec Packet Tracer</h3>
@@ -562,6 +562,24 @@
     <h2>🐍 Projets Programmation &amp; Automatisation</h2>
     <p class="section-subtitle">Scripts, outils, applications et automatisation réseau</p>
     <div class="projets-grid">
+
+        <!-- ===== Agent Zero ===== -->
+        <div class="projet-card">
+            <div class="projet-image">
+                <img src="images/projets/agent-zero/20.jpeg" alt="Agent Zero - Architecture">
+            </div>
+            <h3>Agent Zero - Assistant IA Autonome</h3>
+            <p>Déploiement d'un agent IA conversationnel avec Docker, Google Gemini et OpenRouter. Interface web accessible via navigateur.</p>
+            <div class="tech-tags">
+                <span>🐍 Python</span>
+                <span>🐳 Docker</span>
+                <span>🤖 Gemini</span>
+                <span>🌐 OpenRouter</span>
+                <span>Kali Linux</span>
+            </div>
+            <a href="projets/agent-zero/" class="btn-small">Voir le projet →</a>
+        </div>
+
         <div class="projet-card">
             <div class="projet-image">🤖</div>
             <h3>Automatisation SSH multi-switchs</h3>
@@ -595,7 +613,7 @@
             <h3>EvenNG - Gestion d'événements</h3>
             <p>Outil de gestion d'événements réseau et de supervision, avec interface web Flask et base de données SQLite.</p>
             <div class="tech-tags"><span>Python</span><span>Flask</span><span>JavaScript</span><span>SQLite</span></div>
-            <a href="#" class="btn-small">Voir le projet →</a>
+            <a href="projets/evenng/" class="btn-small">Voir le projet →</a>
         </div>
         <div class="projet-card">
             <div class="projet-image">
